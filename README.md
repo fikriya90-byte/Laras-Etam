@@ -1,50 +1,36 @@
 # Laras Etam
 
-Studio notasi angka berbasis web untuk menyusun, mendengarkan, dan membagikan partitur gamelan Jawa maupun musik Barat. Antarmuka dan panduan aplikasi menggunakan Bahasa Indonesia.
+Laras Etam adalah studio notasi digital berbasis web untuk menulis, mengevaluasi, dan mengekspor partitur gamelan Jawa serta musik Barat. Aplikasi ini dirancang untuk kebutuhan pengajaran, eksplorasi kreatif, dan dokumentasi karya musik tradisional modern.
 
-## Mulai menggunakan
+## Fitur utama
 
-Buka [Laras Etam](https://fikriya90-byte.github.io/Laras-Etam/) setelah GitHub Pages diaktifkan. Untuk menjalankan secara lokal, unduh atau kloning repositori, lalu buka `index.html` di browser modern. Koneksi internet diperlukan agar Tailwind CSS, Google Fonts, dan Font Awesome yang dimuat dari CDN dapat digunakan.
+- Antarmuka notasi interaktif untuk sistem gamelan dan musik Barat
+- Pengaturan laras, irama, bentuk gending, dan struktur partitur
+- Kelompok instrumen multi-track dan kontrol suara
+- Playback, loop, tema, serta wilah virtual untuk audisi langsung
+- Ekspor ke PNG, PDF, WAV, MIDI, dan JSON
+- Dukungan penggunaan di browser tanpa dependency server berat
 
-## Fitur
+## Struktur repositori
 
-- Templat partitur gamelan dan musik Barat serta pembuatan lembar kosong.
-- Pengaturan laras, gaya tradisi, bentuk gending, birama, dan tempo.
-- Penyuntingan notasi angka, lirik, beberapa suara, dan bagian instrumen.
-- Playback, kontrol tempo, loop, serta audisi nada melalui wilah virtual.
-- Impor/ekspor proyek JSON dan ekspor partitur ke PDF, PNG, WAV, serta MIDI.
-- Tampilan responsif dan pilihan tema.
+- `index.html` — landing page proyek
+- `app/index.html` — pintu masuk aplikasi
+- `assets/landing.css` — styling landing page
+- `assets/landing.js` — script landing page
+- `index.hmtl` — aplikasi utama legacy / editor aktif
 
-## Pintasan keyboard
+## Cara membuka
 
-| Pintasan | Aksi |
-| --- | --- |
-| `1`–`7` | Masukkan nada |
-| `.` atau `0` | Perpanjang nada atau masukkan diam |
-| Tombol panah | Navigasi kursor |
-| `Spasi` | Putar atau jeda |
-| `V` | Beralih antara Suara 1 dan Suara 2 |
-| `Ctrl+Z` | Urungkan tindakan terakhir |
-| `Ctrl+S` | Simpan proyek |
-| `Ctrl+K` | Buka pencarian perintah |
-| `Ctrl+Alt+K` | Buka wilah virtual |
-
-## Publikasikan dengan GitHub Pages
-
-1. Buka **Settings → Pages** pada repositori.
-2. Pada **Build and deployment**, pilih **Deploy from a branch**.
-3. Pilih branch `main` dan folder `/ (root)`, lalu simpan.
-4. Tunggu proses deployment selesai, lalu buka URL Pages yang ditampilkan GitHub.
-
-`index.html` adalah pintu masuk standar GitHub Pages dan meneruskan ke berkas aplikasi lama `index.hmtl`. Gunakan alamat root situs agar pengalihan berlangsung otomatis.
+1. Buka halaman landing page `index.html` di browser.
+2. Klik tombol `Buka aplikasi` untuk masuk ke editor.
+3. Atau buka langsung `app/index.html` untuk diarahkan ke aplikasi utama.
 
 ## Catatan
 
-- Aplikasi ini berjalan di sisi klien; tidak diperlukan server aplikasi atau proses build.
-- Data proyek dapat disimpan atau diekspor sebagai JSON. Simpan salinan ekspor secara berkala.
-- Berkas audio sampel khusus dan proyek yang diimpor sebaiknya hanya berasal dari sumber tepercaya.
-- Pustaka pihak ketiga dimuat dari CDN, sehingga ketersediaan dan versinya mengikuti penyedia masing-masing.
+- Aplikasi ini masih menggunakan file utama legacy `index.hmtl` sebagai mesin editor aktif.
+- Struktur proyek terus disederhanakan agar lebih rapi, profesional, dan siap untuk portofolio atau publikasi.
+- Untuk penggunaan GitHub Pages, landing page dan editor dapat diakses melalui URL repositori yang sudah diaktifkan.
 
-## Berkontribusi
+## Status
 
-Perubahan, laporan masalah, dan usulan fitur sangat dipersilakan melalui GitHub Issues atau Pull Requests. Sertakan langkah reproduksi dan browser/perangkat yang digunakan untuk laporan bug.
+Repositori ini sedang dalam tahap penguatan struktur dan branding agar lebih layak untuk demonstrasi profesional dan publikasi. 
