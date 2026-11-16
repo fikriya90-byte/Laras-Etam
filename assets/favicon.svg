@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Laras Etam logo">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="#07111f"/>
+  <rect x="12" y="12" width="104" height="104" rx="22" fill="url(#bg)"/>
+  <path d="M35 381 L35 282.5 L69.7 282.5 Q96.4 282.5 108.8 294.5 Q121.3 306.5 121.3 329.2 Q121.3 351.8 108.8 363.8 Q96.4 375.8 69.7 375.8 L35 375.8 L35 381 Z" transform="matrix(0.26 0 0 0.26 10 10)" fill="#111827" opacity="0.94"/>
+  <path d="M82.5 89.5V29.5H95.5V89.5H82.5ZM35 44.5H77V58.5H35V44.5ZM35 69.5H77V83.5H35V69.5Z" fill="#111827"/>
+</svg>
