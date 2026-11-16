@@ -1,0 +1,3658 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#181a1f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Kepatihan Studio — Notasi Angka Gamelan Jawa & Musik Barat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --bg-top: #181a1f;
+      --bg-panel: #20232a;
+      --bg-card: #282c34;
+      --bg-input: #14161a;
+      --bg-desk: #111317;
+      --border-main: #333842;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #f59e0b;
+    }
+
+    body.theme-light {
+      --bg-top: #f8fafc;
+      --bg-panel: #ffffff;
+      --bg-card: #f1f5f9;
+      --bg-input: #e2e8f0;
+      --bg-desk: #cbd5e1;
+      --border-main: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent: #d97706;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-desk);
+      color: var(--text-main);
+      margin: 0;
+      overflow-x: hidden;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .score-font {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .sb-top {
+      background-color: var(--bg-top);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
+    .sb-panel {
+      background-color: var(--bg-panel);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
+    .sb-card {
+      background-color: var(--bg-card);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
+    .sb-input {
+      background-color: var(--bg-input);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
+    .sb-desk {
+      background-color: var(--bg-desk);
+    }
+
+    .sb-muted {
+      color: var(--text-muted);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Tekstur Kertas Partitur */
+    .paper-classic {
+      background-color: #ffffff;
+      color: #0f172a;
+    }
+    .paper-ivory {
+      background-color: #fdfbf7;
+      color: #1c1917;
+      background-image: radial-gradient(rgba(180, 140, 80, 0.08) 1px, transparent 0);
+      background-size: 16px 16px;
+    }
+    .paper-manuscript {
+      background-color: #f7f1e1;
+      color: #292524;
+      background-image: linear-gradient(to bottom, rgba(120, 90, 40, 0.06) 1px, transparent 1px);
+      background-size: 100% 24px;
+    }
+    .paper-blueprint {
+      background-color: #f0f9ff;
+      color: #0c4a6e;
+    }
+
+    /* Kurung Sistem ala Sibelius */
+    .system-bracket {
+      position: relative;
+      border-left: 3px solid #1e293b;
+      padding-left: 10px;
+    }
+    .system-bracket::before,
+    .system-bracket::after {
+      content: '';
+      position: absolute;
+      left: -3px;
+      width: 10px;
+      height: 3px;
+      background-color: #1e293b;
+    }
+    .system-bracket::before { top: 0; }
+    .system-bracket::after { bottom: 0; }
+
+    /* Garis Bendera Subdivisi Kepatihan */
+    .beam-1 {
+      border-top: 2px solid currentColor;
+      padding-top: 2px;
+    }
+    .beam-2 {
+      border-top: 2px solid currentColor;
+      box-shadow: inset 0 2px 0 0 #ffffff, inset 0 4px 0 0 currentColor;
+      padding-top: 5px;
+    }
+    .paper-ivory .beam-2 {
+      box-shadow: inset 0 2px 0 0 #fdfbf7, inset 0 4px 0 0 currentColor;
+    }
+    .paper-manuscript .beam-2 {
+      box-shadow: inset 0 2px 0 0 #f7f1e1, inset 0 4px 0 0 currentColor;
+    }
+    .paper-blueprint .beam-2 {
+      box-shadow: inset 0 2px 0 0 #f0f9ff, inset 0 4px 0 0 currentColor;
+    }
+
+    /* Gaya Bilah Perunggu Virtual */
+    .wilah-bar-wood {
+      background: linear-gradient(180deg, #3b1d0e 0%, #241007 100%);
+      border-top: 2px solid #92400e;
+    }
+    .wilah-key-bronze {
+      background: linear-gradient(180deg, #fde68a 0%, #d97706 55%, #92400e 100%);
+      color: #1c1917;
+      border: 1px solid #fbbf24;
+      box-shadow: 0 3px 0 #78350f, inset 0 1px 1px rgba(255,255,255,0.65);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
+    }
+    .wilah-key-bronze:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #78350f, 0 0 14px rgba(251, 191, 36, 0.9);
+      filter: brightness(1.18);
+    }
+    .wilah-key-pelog {
+      background: linear-gradient(180deg, #fed7aa 0%, #ea580c 55%, #9a3412 100%);
+      color: #fff7ed;
+      border: 1px solid #fb923c;
+      box-shadow: 0 3px 0 #7c2d12, inset 0 1px 1px rgba(255,255,255,0.45);
+    }
+    .wilah-key-pelog:active {
+      transform: translateY(2px);
+      filter: brightness(1.18);
+    }
+    .wilah-key-piano {
+      background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
+      color: #0f172a;
+      border: 1px solid #94a3b8;
+      box-shadow: 0 3px 0 #64748b;
+    }
+    .wilah-key-piano:active {
+      transform: translateY(2px);
+      background: #bae6fd;
+      box-shadow: 0 1px 0 #0284c7;
+    }
+
+    /* Responsif Floating Keypad untuk Mobile & Tablet */
+    @media (max-width: 639px) {
+      #floatingKeypad {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 24px !important;
+        top: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 16px 16px 0 0 !important;
+      }
+      #floatingKeypad.keypad-minimized .keypad-body {
+        display: none !important;
+      }
+    }
+
+    /* Mode Cetak / Simpan PDF Bersih */
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body, .sb-desk {
+        background: #ffffff !important;
+        color: #000000 !important;
+        overflow: visible !important;
+        height: auto !important;
+      }
+      #scoreScrollArea {
+        overflow: visible !important;
+        height: auto !important;
+        padding: 0 !important;
+      }
+      #scorePaper {
+        box-shadow: none !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 12mm !important;
+      }
+    }
+  </style>
+</head>
+<body class="theme-dark h-screen flex flex-col select-none overflow-hidden">
+
+  <!-- ==================== TOP BAR & SIBELIUS RIBBON ==================== -->
+  <header class="no-print sb-top border-b z-30 shrink-0">
+    <!-- Baris Judul & Transport Utama -->
+    <div class="px-2.5 sm:px-4 py-1.5 flex items-center justify-between gap-2 border-b border-slate-500/20">
+      <div class="flex items-center gap-2 min-w-0">
+        <button onclick="openQuickStart()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs flex items-center gap-1.5 shrink-0 shadow-sm transition" title="Buka Sibelius Quick Start">
+          <i class="fa-solid fa-music"></i>
+          <span class="hidden sm:inline">Quick Start</span>
+        </button>
+
+        <button onclick="toggleLeftDrawer()" class="lg:hidden px-2.5 py-1.5 rounded-lg sb-input border text-xs font-semibold flex items-center gap-1 shrink-0" title="Buka/Tutup Mixer & Inspektur">
+          <i class="fa-solid fa-sliders text-amber-500"></i>
+          <span class="hidden md:inline">Mixer</span>
+        </button>
+
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <h1 id="topDocTitle" class="font-bold text-xs sm:text-sm truncate">Lancaran Ricik-Ricik</h1>
+            <span id="topModeBadge" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 shrink-0">Kepatihan • Slendro</span>
+          </div>
+          <p id="topSubInfo" class="text-[10px] sb-muted truncate hidden sm:block">Gaya Surakarta • 8 Gatra • ♩ = 84 BPM</p>
+        </div>
+      </div>
+
+      <!-- Saklar Cepat Sistem Notasi (Gamelan vs Musik Barat) -->
+      <div class="hidden md:flex items-center sb-input p-0.5 rounded-lg border text-[11px] font-bold shrink-0">
+        <button id="btnSystemGamelan" onclick="setSystemMode('gamelan')" class="px-2.5 py-1 rounded-md bg-amber-500 text-slate-950 transition">
+          Gamelan Jawa
+        </button>
+        <button id="btnSystemWestern" onclick="setSystemMode('western')" class="px-2.5 py-1 rounded-md sb-muted hover:text-amber-400 transition">
+          Musik Barat
+        </button>
+      </div>
+
+      <!-- Kontrol Transport Playback Sibelius -->
+      <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <button id="btnPlayPause" onclick="togglePlayback()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition" title="Putar / Jeda (Spasi)">
+          <i id="playIcon" class="fa-solid fa-play"></i>
+          <span id="playLabel" class="hidden sm:inline">Putar</span>
+        </button>
+        <button onclick="stopPlayback()" class="px-2.5 py-1.5 rounded-lg sb-input border hover:border-red-500 text-xs transition" title="Hentikan & Kembali ke Awal">
+          <i class="fa-solid fa-stop text-red-400"></i>
+        </button>
+        <button id="btnHalfSpeed" onclick="toggleHalfSpeed()" class="hidden sm:inline-flex px-2 py-1.5 rounded-lg sb-input border text-[11px] font-bold transition" title="Latihan Setengah Kecepatan (0.5x)">
+          0.5×
+        </button>
+        <button id="btnLoopGatra" onclick="toggleLoopGatra()" class="hidden md:inline-flex px-2 py-1.5 rounded-lg sb-input border text-xs transition" title="Ulangi Gatra Aktif (Loop)">
+          <i class="fa-solid fa-repeat"></i>
+        </button>
+        <div class="hidden sm:flex items-center sb-input border rounded-lg px-2 py-1 gap-1">
+          <span class="text-[10px] sb-muted font-bold">BPM</span>
+          <input id="tempoInput" type="number" min="30" max="240" value="84" onchange="updateTempo(this.value)" class="w-11 bg-transparent text-xs font-bold text-center focus:outline-none" />
+        </div>
+      </div>
+
+      <!-- Utilitas Kanan: Command Search, Tema, Simpan, Ekspor -->
+      <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <button onclick="openCommandSearch()" class="px-2.5 py-1.5 rounded-lg sb-input border hover:border-amber-500 text-xs flex items-center gap-1.5 transition" title="Pencarian Perintah Sibelius (Ctrl+K)">
+          <i class="fa-solid fa-magnifying-glass text-amber-500"></i>
+          <span class="hidden xl:inline text-[11px] sb-muted">Cari (Ctrl+K)</span>
+        </button>
+        <button id="btnThemeToggle" onclick="cycleTheme()" class="px-2.5 py-1.5 rounded-lg sb-input border hover:border-amber-500 text-xs flex items-center gap-1 transition" title="Ganti Tema (Auto / Terang / Gelap)">
+          <i id="themeIcon" class="fa-solid fa-circle-half-stroke text-amber-400"></i>
+          <span id="themeLabel" class="hidden lg:inline text-[11px] font-semibold">Auto</span>
+        </button>
+        <button onclick="saveCurrentProject()" class="px-2.5 py-1.5 rounded-lg sb-input border hover:border-emerald-500 text-xs font-semibold flex items-center gap-1 transition" title="Simpan Versi Proyek (Ctrl+S)">
+          <i class="fa-solid fa-floppy-disk text-emerald-400"></i>
+          <span class="hidden md:inline">Simpan</span>
+        </button>
+        <button onclick="openModal('modalExport')" class="px-2.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1 shadow-sm transition" title="Ekspor WAV, PNG, PDF, MIDI, JSON">
+          <i class="fa-solid fa-file-export"></i>
+          <span class="hidden sm:inline">Ekspor</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab Ribbon Sibelius -->
+    <div class="px-2.5 sm:px-4 flex items-center justify-between border-b border-slate-500/20 overflow-x-auto no-scrollbar text-xs">
+      <div class="flex items-center gap-1 py-1">
+        <button data-ribbon-tab="file" onclick="switchRibbonTab('file')" class="ribbon-tab-btn px-2.5 py-1 rounded-md font-bold transition">File</button>
+        <button data-ribbon-tab="home" onclick="switchRibbonTab('home')" class="ribbon-tab-btn px-2.5 py-1 rounded-md font-bold bg-amber-500/20 text-amber-400 transition">Home</button>
+        <button data-ribbon-tab="note" onclick="switchRibbonTab('note')" class="ribbon-tab-btn px-2.5 py-1 rounded-md font-bold transition">Note Input</button>
+        <button data-ribbon-tab="notations" onclick="switchRibbonTab('notations')" class="ribbon-tab-btn px-2.5 py-1 rounded-md font-bold transition">Notations</button>
+        <button data-ribbon-tab="text" onclick="switchRibbonTab('text')" class="ribbon-tab-btn px-2.5 py-1 rounded-md font-bold transition">Text & Lirik</button>
+        <button data-ribbon-tab="play" onclick="switchRibbonTab('play')" class="ribbon-tab-btn px-2.5 py-1 rounded-md font-bold transition">Play</button>
+        <button data-ribbon-tab="layout" onclick="switchRibbonTab('layout')" class="ribbon-tab-btn px-2.5 py-1 rounded-md font-bold transition">Layout</button>
+      </div>
+
+      <!-- Quick Mobile Mode Switcher -->
+      <div class="flex md:hidden items-center gap-1 py-1 shrink-0">
+        <button onclick="setSystemMode(state.systemMode === 'gamelan' ? 'western' : 'gamelan')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold text-[10px]">
+          <i class="fa-solid fa-arrows-rotate mr-1"></i>Ganti Mode
+        </button>
+      </div>
+    </div>
+
+    <!-- Isi Toolbar Ribbon Aktif -->
+    <div id="ribbonContent" class="px-2.5 sm:px-4 py-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar text-xs sb-panel">
+      <!-- Dirender dinamis oleh JS -->
+    </div>
+  </header>
+
+  <!-- ==================== WORKSPACE UTAMA ==================== -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- PANEL KIRI: INSPEKTOR & MIXER PANGGUNG (Drawer di Mobile/Tablet, Fixed di Desktop) -->
+    <aside id="leftSidebar" class="no-print sb-panel border-r w-72 sm:w-80 shrink-0 flex flex-col z-25 fixed lg:static inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 shadow-2xl lg:shadow-none">
+      <div class="px-3 py-2 border-b border-slate-500/20 flex items-center justify-between">
+        <span class="font-bold text-xs flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-amber-500"></i>
+          <span>Inspektur & Mixer Panggung</span>
+        </span>
+        <button onclick="toggleLeftDrawer(false)" class="lg:hidden px-2 py-1 rounded sb-input text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-3 space-y-3 text-xs">
+        <!-- Konfigurasi Gending / Lagu Aktif -->
+        <div class="sb-card border rounded-xl p-2.5 space-y-2">
+          <div class="font-bold text-[11px] uppercase tracking-wider text-amber-500 flex items-center justify-between">
+            <span>Konfigurasi Partitur</span>
+            <span id="inspectorGayaBadge" class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15">Surakarta</span>
+          </div>
+
+          <div id="gamelanConfigGroup" class="grid grid-cols-2 gap-1.5">
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">Gaya Tradisi</label>
+              <select id="selectGaya" onchange="updateGaya(this.value)" class="w-full px-2 py-1 rounded sb-input border text-xs font-semibold">
+                <option value="surakarta">Surakarta</option>
+                <option value="yogyakarta">Yogyakarta</option>
+                <option value="jawatimuran">Jawa Timuran</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">Laras</label>
+              <select id="selectLaras" onchange="updateLaras(this.value)" class="w-full px-2 py-1 rounded sb-input border text-xs font-semibold">
+                <option value="slendro">Slendro</option>
+                <option value="pelog">Pelog</option>
+                <option value="gabungan">Gabungan (Sl+Pl)</option>
+              </select>
+            </div>
+            <div class="col-span-2">
+              <label class="text-[10px] sb-muted block mb-0.5">Bentuk Gending</label>
+              <select id="selectGendingForm" onchange="updateGendingForm(this.value)" class="w-full px-2 py-1 rounded sb-input border text-xs font-semibold">
+                <option value="lancaran">Lancaran (4 Ketuk/Gatra)</option>
+                <option value="ketawang">Ketawang (16 Ketuk/Gongan)</option>
+                <option value="ladrang">Ladrang (32 Ketuk/Gongan)</option>
+                <option value="srepegan">Srepegan / Sampakan</option>
+                <option value="bebas">Bentuk Bebas</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="westernConfigGroup" class="hidden grid grid-cols-2 gap-1.5">
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">Nada Dasar</label>
+              <select id="selectWesternKey" onchange="updateWesternKey(this.value)" class="w-full px-2 py-1 rounded sb-input border text-xs font-semibold">
+                <option value="Do = C">Do = C</option>
+                <option value="Do = D">Do = D</option>
+                <option value="Do = Eb">Do = Eb</option>
+                <option value="Do = E">Do = E</option>
+                <option value="Do = F">Do = F</option>
+                <option value="Do = G">Do = G</option>
+                <option value="Do = A">Do = A</option>
+                <option value="Do = Bb">Do = Bb</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">Birama</label>
+              <select id="selectTimeSig" onchange="updateTimeSig(this.value)" class="w-full px-2 py-1 rounded sb-input border text-xs font-semibold">
+                <option value="4">4/4 (4 Ketuk)</option>
+                <option value="3">3/4 (3 Ketuk)</option>
+                <option value="2">2/4 (2 Ketuk)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigator Mini-Map Gatra -->
+        <div class="sb-card border rounded-xl p-2.5 space-y-1.5">
+          <div class="font-bold text-[11px] uppercase tracking-wider text-sky-400 flex items-center justify-between">
+            <span>Navigator Gatra / Birama</span>
+            <span id="navTotalGatra" class="text-[10px] sb-muted">8 Gatra</span>
+          </div>
+          <div id="gatraNavigatorGrid" class="grid grid-cols-4 gap-1 max-h-28 overflow-y-auto">
+            <!-- Dirender dinamis oleh JS -->
+          </div>
+        </div>
+
+        <!-- Mixer & Panggung Stereo -->
+        <div class="sb-card border rounded-xl p-2.5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-[11px] uppercase tracking-wider text-emerald-400">Mixer & Panggung Stereo</span>
+            <button onclick="openModal('modalAddTrack')" class="px-2 py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px]">
+              + Ricikan
+            </button>
+          </div>
+          <div id="mixerTrackList" class="space-y-2">
+            <!-- Dirender dinamis oleh JS -->
+          </div>
+        </div>
+
+        <!-- Saran Cengkok & Harmoni AI Hibrida -->
+        <div class="sb-card border rounded-xl p-2.5 space-y-2">
+          <div class="font-bold text-[11px] uppercase tracking-wider text-purple-400 flex items-center justify-between">
+            <span><i class="fa-solid fa-sparkles mr-1"></i>Saran Cengkok / Akor</span>
+            <button onclick="generateSmartSuggestions()" class="text-[10px] underline hover:text-purple-300">Segarkan</button>
+          </div>
+          <div id="smartSuggestionsList" class="space-y-1.5">
+            <!-- Dirender dinamis oleh JS -->
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Backdrop Drawer untuk Mobile/Tablet -->
+    <div id="leftDrawerBackdrop" onclick="toggleLeftDrawer(false)" class="no-print hidden fixed inset-0 bg-black/60 z-20 lg:hidden"></div>
+
+    <!-- MEJA PARTITUR TENGAH (SIBELIUS DESK + DYNAMIC PART TABS) -->
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+      <!-- Bilah Tab Dokumen: Full Score & Dynamic Parts -->
+      <div class="no-print sb-top border-b px-2.5 sm:px-4 py-1 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar shrink-0">
+        <div id="dynamicPartTabs" class="flex items-center gap-1">
+          <!-- Tab Full Score + Dynamic Parts dirender dinamis -->
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0 text-[11px]">
+          <span id="reviewModeBadge" class="hidden px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold">
+            <i class="fa-solid fa-lock mr-1"></i>Review Mode
+          </span>
+          <button onclick="togglePanoramaView()" id="btnPanorama" class="px-2 py-0.5 rounded sb-input border hover:border-amber-500 font-semibold" title="Alihkan Tampilan Halaman / Panorama (Shift+P)">
+            <i class="fa-solid fa-arrows-left-right mr-1 text-amber-500"></i><span id="panoramaLabel">Halaman</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Area Gulir Kertas Partitur -->
+      <div id="scoreScrollArea" class="flex-1 overflow-auto p-3 sm:p-6 md:p-8 flex justify-center items-start">
+        <div id="scorePaper" class="paper-classic w-full max-w-4xl rounded-lg shadow-2xl p-5 sm:p-8 md:p-10 transition-all origin-top mb-56 sm:mb-24">
+          <!-- Kop Judul Partitur -->
+          <div class="border-b-2 border-slate-800 pb-3 mb-5 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span id="paperSystemTag" class="px-2 py-0.5 rounded bg-slate-900 text-amber-400 text-[10px] font-extrabold uppercase tracking-wider">
+                  Notasi Kepatihan • Slendro • Surakarta
+                </span>
+                <span id="paperFormTag" class="px-2 py-0.5 rounded bg-slate-200 text-slate-800 text-[10px] font-bold uppercase">
+                  Lancaran
+                </span>
+              </div>
+              <h2 id="scoreHeaderTitle" contenteditable="true" onblur="updateScoreMeta('title', this.innerText)" class="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight mt-1 outline-none focus:bg-amber-100/60 rounded px-1 -mx-1">
+                Lancaran Ricik-Ricik
+              </h2>
+              <p id="scoreHeaderSubtitle" contenteditable="true" onblur="updateScoreMeta('subtitle', this.innerText)" class="text-xs sm:text-sm text-slate-600 font-medium outline-none focus:bg-amber-100/60 rounded px-1 -mx-1">
+                Laras Slendro Pathet Manyura — Gaya Surakarta
+              </p>
+            </div>
+            <div class="text-left sm:text-right shrink-0">
+              <div id="scoreHeaderComposer" contenteditable="true" onblur="updateScoreMeta('composer', this.innerText)" class="text-xs font-bold text-slate-800 outline-none focus:bg-amber-100/60 rounded px-1">
+                Penata: Karawitan Studio
+              </div>
+              <div id="scoreHeaderTempo" class="score-font text-xs font-extrabold text-slate-700 mt-0.5">
+                ♩ = 84 (Irama Lancar)
+              </div>
+            </div>
+          </div>
+
+          <!-- Kontainer Sistem Baris Partitur -->
+          <div id="scoreSystemsContainer" class="space-y-6">
+            <!-- Sistem gatra/birama dirender oleh JS -->
+          </div>
+
+          <!-- Catatan Kaki Partitur -->
+          <div class="mt-8 pt-3 border-t border-slate-300 flex flex-wrap items-center justify-between text-[10px] text-slate-500 gap-2">
+            <span>Keterangan Kolotomik: ◯ Gong Ageng • ◌ Gong Suwukan • ◡ Kenong • ◠ Kempul • + Kethuk • - Kempyang</span>
+            <span>Dicetak dari Kepatihan Studio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== FLOATING SIBELIUS KEYPAD ==================== -->
+      <div id="floatingKeypad" class="no-print sb-panel border rounded-2xl shadow-2xl w-72 sm:w-80 fixed right-3 sm:right-5 bottom-8 z-30 overflow-hidden">
+        <!-- Header Keypad (Bisa Digeser di Desktop/Tablet, Bisa Dilipat di Mobile) -->
+        <div id="keypadDragHandle" class="sb-top px-3 py-2 border-b flex items-center justify-between cursor-move">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-grip-vertical sb-muted text-xs"></i>
+            <span class="font-extrabold text-xs tracking-wide">Sibelius Keypad</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button id="btnVoiceToggle" onclick="toggleActiveVoice()" class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-bold text-[10px] transition" title="Pindah Lapisan Suara Atas/Bawah (Tombol V)">
+              Suara 1 (Atas)
+            </button>
+            <button onclick="toggleKeypadMinimize()" class="sm:hidden px-2 py-0.5 rounded sb-input text-xs font-bold" title="Lipat / Buka Keypad">
+              <i id="keypadMinIcon" class="fa-solid fa-chevron-down"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="keypad-body flex flex-col">
+          <!-- Info Ketukan Aktif & Tombol Wilah Virtual -->
+          <div class="px-3 py-1.5 sb-card border-b text-[10px] flex items-center justify-between gap-1">
+            <span id="activeCellInfo" class="truncate font-semibold">Demung • Gatra 1 • Ketuk 1</span>
+            <button onclick="toggleVirtualWilahBar()" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-slate-950 font-bold text-[10px] shrink-0 transition" title="Buka/Tutup Bilah Wilah Virtual (Ctrl+Alt+K)">
+              <i class="fa-solid fa-bars-staggered mr-1"></i>Wilah
+            </button>
+          </div>
+
+          <!-- Bilah Aksi Cepat (Undo, Auto-Garap, Jenjang Irama) -->
+          <div class="px-2.5 py-1.5 border-b border-slate-500/20 flex items-center gap-1 overflow-x-auto no-scrollbar text-[10px]">
+            <button onclick="undoLastAction()" class="px-2 py-1 rounded sb-input border hover:border-amber-500 font-bold shrink-0" title="Undo (Ctrl+Z)">
+              <i class="fa-solid fa-rotate-left text-amber-500"></i>
+            </button>
+            <button onclick="openModal('modalAutoGarap')" class="px-2 py-1 rounded bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/30 font-bold shrink-0 transition" title="Auto-Garap Karawitan dari Balungan">
+              <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Auto-Garap
+            </button>
+            <select id="quickIramaSelect" onchange="setIramaLevel(this.value)" class="px-1.5 py-1 rounded sb-input border text-[10px] font-semibold shrink-0" title="Jenjang Irama Karawitan">
+              <option value="lancar" selected>Irama I (Lancar)</option>
+              <option value="tanggung">Irama II (Tanggung)</option>
+              <option value="dados">Irama III (Dados)</option>
+              <option value="wiled">Irama IV (Wiled)</option>
+            </select>
+          </div>
+
+          <!-- Subdivisi & Oktaf -->
+          <div class="p-2.5 space-y-2">
+            <div class="grid grid-cols-4 gap-1 text-[11px] font-bold">
+              <button data-subdiv="1" onclick="setCellSubdivision(1)" class="subdiv-btn py-1.5 rounded-lg bg-amber-500 text-slate-950 transition">1 Ketuk</button>
+              <button data-subdiv="2" onclick="setCellSubdivision(2)" class="subdiv-btn py-1.5 rounded-lg sb-input border transition">½ (2)</button>
+              <button data-subdiv="3" onclick="setCellSubdivision(3)" class="subdiv-btn py-1.5 rounded-lg sb-input border transition">Triol (3)</button>
+              <button data-subdiv="4" onclick="setCellSubdivision(4)" class="subdiv-btn py-1.5 rounded-lg sb-input border transition">¼ (4)</button>
+            </div>
+
+            <!-- Pemilih Sub-Ketukan jika subdivisi > 1 -->
+            <div id="subBeatSelectorRow" class="hidden flex items-center justify-between gap-1 sb-card px-2 py-1 rounded-lg border text-[10px]">
+              <span class="sb-muted font-bold">Posisi Sub-Ketuk:</span>
+              <div id="subBeatButtons" class="flex items-center gap-1"></div>
+            </div>
+
+            <!-- Oktaf & Harmoni Vertikal -->
+            <div class="grid grid-cols-4 gap-1 text-[11px] font-bold">
+              <button onclick="shiftNoteOctave(-1)" class="py-1.5 rounded-lg sb-input border hover:border-amber-500 transition" title="Titik Bawah / Turun Oktaf">Oktaf -</button>
+              <button onclick="shiftNoteOctave(1)" class="py-1.5 rounded-lg sb-input border hover:border-amber-500 transition" title="Titik Atas / Naik Oktaf">Oktaf +</button>
+              <button onclick="applyVerticalInterval('gembyang')" class="py-1.5 rounded-lg sb-input border hover:border-sky-400 text-sky-400 transition" title="Tambah Suara 2 Gembyang (Oktaf)">Gembyang</button>
+              <button onclick="applyVerticalInterval('kempyung')" class="py-1.5 rounded-lg sb-input border hover:border-purple-400 text-purple-400 transition" title="Tambah Suara 2 Kempyung">Kempyung</button>
+            </div>
+
+            <!-- Grid Tombol Angka Dinamis (Slendro / Pelog / Gabungan / Kendhang / Barat) -->
+            <div id="keypadNotesContainer" class="space-y-1.5">
+              <!-- Dirender dinamis oleh JS -->
+            </div>
+
+            <!-- Input Lirik / Cakepan Ketukan Aktif -->
+            <div class="pt-1 border-t border-slate-500/20 flex items-center gap-1.5">
+              <span id="lyricVerseLabel" class="text-[10px] font-bold text-amber-500 shrink-0">Ayat 1:</span>
+              <input id="inputBeatLyric" type="text" placeholder="Suku kata cakepan/lirik..." oninput="updateCurrentCellLyric(this.value)" class="flex-1 px-2 py-1 rounded sb-input border text-xs focus:outline-none focus:border-amber-500" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VIRTUAL WILAH PERUNGGU / PIANO AUDISI ==================== -->
+      <div id="virtualWilahBar" class="no-print hidden fixed bottom-6 left-0 right-0 z-30 wilah-bar-wood px-2.5 sm:px-4 py-2 shadow-2xl">
+        <div class="max-w-5xl mx-auto flex flex-col gap-1.5">
+          <div class="flex items-center justify-between text-[10px] text-amber-200">
+            <div class="flex items-center gap-2">
+              <span class="font-bold tracking-wide uppercase">
+                <i class="fa-solid fa-drum-steelpan text-amber-400 mr-1"></i>
+                <span id="wilahBarTitle">Rancakan Wilah Perunggu (Slendro)</span>
+              </span>
+              <span class="hidden sm:inline text-amber-300/75">• Ketuk bilah untuk audisi & input nada langsung</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button id="btnWilahStepMode" onclick="toggleWilahStepInput()" class="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[9px] transition">
+                Mode: Rekam Step-Time
+              </button>
+              <button onclick="toggleVirtualWilahBar(false)" class="px-2 py-0.5 rounded bg-black/40 hover:bg-black/70 text-amber-200 text-xs">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+          <div id="virtualWilahKeys" class="grid grid-cols-6 sm:grid-cols-12 gap-1 sm:gap-1.5">
+            <!-- Dirender dinamis oleh JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== STATUS BAR BAWAH ALA SIBELIUS ==================== -->
+  <footer class="no-print sb-top border-t px-3 py-1 flex items-center justify-between text-[10px] sb-muted shrink-0 z-30">
+    <div class="flex items-center gap-3 truncate">
+      <span id="statusReadyText" class="font-semibold text-emerald-400"><i class="fa-solid fa-circle text-[7px] mr-1"></i>Siap</span>
+      <span id="statusCursorInfo" class="truncate">Instrumen: Demung • Gatra 1 • Ketuk 1 • Suara 1</span>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button onclick="changeZoom(-0.1)" class="hover:text-amber-400 px-1" title="Perkecil Kertas"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+      <span id="zoomLabel" class="font-bold score-font">100%</span>
+      <button onclick="changeZoom(0.1)" class="hover:text-amber-400 px-1" title="Perbesar Kertas"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+    </div>
+  </footer>
+
+  <!-- ==================== MODAL 1: SIBELIUS QUICK START ==================== -->
+  <div id="quickStartModal" class="no-print fixed inset-0 bg-black/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-5">
+    <div class="sb-panel border rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="sb-top px-4 sm:px-6 py-3.5 border-b flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-extrabold text-sm">
+            <i class="fa-solid fa-music"></i>
+          </div>
+          <div>
+            <h2 class="font-extrabold text-sm sm:text-base">Kepatihan Studio — Sibelius Quick Start</h2>
+            <p class="text-[11px] sb-muted">Pilih templat gending Jawa, partitur musik Barat, atau lanjutkan proyek tersimpan</p>
+          </div>
+        </div>
+        <button onclick="closeQuickStart()" class="px-3 py-1.5 rounded-lg sb-input border hover:border-amber-500 text-xs font-bold">
+          Tutup <i class="fa-solid fa-xmark ml-1"></i>
+        </button>
+      </div>
+
+      <!-- Tab Quick Start -->
+      <div class="px-4 sm:px-6 pt-2 border-b border-slate-500/20 flex items-center gap-2 text-xs font-bold">
+        <button id="qsTabTemplates" onclick="switchQuickStartTab('templates')" class="px-3 py-2 border-b-2 border-amber-500 text-amber-400">Templat & Setup Baru</button>
+        <button id="qsTabSaved" onclick="switchQuickStartTab('saved')" class="px-3 py-2 border-b-2 border-transparent sb-muted">Proyek Tersimpan & Versi</button>
+        <button id="qsTabGuide" onclick="switchQuickStartTab('guide')" class="px-3 py-2 border-b-2 border-transparent sb-muted">Panduan & Pintasan</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+        <!-- Tab 1: Templates & Setup -->
+        <div id="qsBodyTemplates" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="lg:col-span-2 space-y-3">
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-500">Pilih Templat Bawaan</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button onclick="loadPresetAndClose('ricik_slendro')" class="sb-card border hover:border-amber-500 rounded-xl p-3 text-left transition">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-xs text-amber-400">Lancaran Ricik-Ricik</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">Slendro</span>
+                </div>
+                <p class="text-[11px] sb-muted mt-1">Gaya Surakarta • Full Ricikan (Demung, Saron, Peking, Slenthem, Bonang, Kendhang, Gong)</p>
+              </button>
+
+              <button onclick="loadPresetAndClose('puspawarna')" class="sb-card border hover:border-amber-500 rounded-xl p-3 text-left transition">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-xs text-emerald-400">Ketawang Puspawarna</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">Slendro</span>
+                </div>
+                <p class="text-[11px] sb-muted mt-1">Gaya Surakarta • Lengkap dengan Cakepan Vokal & Penanda Kenong/Gong</p>
+              </button>
+
+              <button onclick="loadPresetAndClose('wilujeng_pelog')" class="sb-card border hover:border-amber-500 rounded-xl p-3 text-left transition">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-xs text-orange-400">Ladrang Wilujeng</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-300 font-bold">Pelog Barang</span>
+                </div>
+                <p class="text-[11px] sb-muted mt-1">Gaya Yogyakarta • Susunan Balungan & Kendhang Satunggal</p>
+              </button>
+
+              <button onclick="loadPresetAndClose('jatim_slendro')" class="sb-card border hover:border-amber-500 rounded-xl p-3 text-left transition">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-xs text-rose-400">Lancaran Gula Klapa</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold">Jawa Timuran</span>
+                </div>
+                <p class="text-[11px] sb-muted mt-1">Embat Jawi Wetanan • Ritme Enerjik & Kendhang Ngremo</p>
+              </button>
+
+              <button onclick="loadPresetAndClose('gabungan_campursari')" class="sb-card border hover:border-amber-500 rounded-xl p-3 text-left transition">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-xs text-purple-400">Karya Gabungan Slendro-Pelog</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-bold">Gabungan</span>
+                </div>
+                <p class="text-[11px] sb-muted mt-1">Transisi laras Slendro (1 2 3 5 6) & Pelog (4 7) dalam satu partitur</p>
+              </button>
+
+              <button onclick="loadPresetAndClose('western_choir')" class="sb-card border hover:border-sky-500 rounded-xl p-3 text-left transition">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-xs text-sky-400">Not Angka Musik Barat</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">Do = C • 4/4</span>
+                </div>
+                <p class="text-[11px] sb-muted mt-1">Melodi Utama, Harmoni Vokal, Bass, & Piano dengan tanda kromatik</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- Form Buat Partitur Kosong Kustom -->
+          <div class="sb-card border rounded-xl p-3.5 space-y-2.5 text-xs">
+            <div class="font-bold uppercase tracking-wider text-sky-400">Buat Lembar Kosong Baru</div>
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">Judul Gending / Lagu</label>
+              <input id="qsNewTitle" type="text" value="Gending Baru" class="w-full px-2.5 py-1.5 rounded sb-input border text-xs font-semibold" />
+            </div>
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">Penata / Komposer</label>
+              <input id="qsNewComposer" type="text" value="Penata Karawitan" class="w-full px-2.5 py-1.5 rounded sb-input border text-xs" />
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-[10px] sb-muted block mb-0.5">Sistem</label>
+                <select id="qsNewSystem" class="w-full px-2 py-1.5 rounded sb-input border text-xs font-semibold">
+                  <option value="gamelan">Gamelan Jawa</option>
+                  <option value="western">Musik Barat</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[10px] sb-muted block mb-0.5">Jumlah Gatra</label>
+                <input id="qsNewMeasures" type="number" min="2" max="64" value="8" class="w-full px-2 py-1.5 rounded sb-input border text-xs font-bold" />
+              </div>
+            </div>
+            <button onclick="createBlankScoreFromQS()" class="w-full py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow transition">
+              Mulai Menulis Partitur
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Saved Projects & Versions -->
+        <div id="qsBodySaved" class="hidden space-y-3 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold uppercase tracking-wider text-emerald-400">Riwayat Simpan & Versi Partitur</span>
+            <label class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold cursor-pointer">
+              <i class="fa-solid fa-folder-open mr-1"></i>Impor File .JSON
+              <input type="file" accept=".json" onchange="importProjectJson(event)" class="hidden" />
+            </label>
+          </div>
+          <div id="savedProjectsList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <!-- Dirender dinamis oleh JS -->
+          </div>
+        </div>
+
+        <!-- Tab 3: Guide & Shortcuts -->
+        <div id="qsBodyGuide" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="sb-card border rounded-xl p-3 space-y-1.5">
+            <div class="font-bold text-amber-400">Pintasan Keyboard Sibelius</div>
+            <ul class="space-y-1 text-[11px] sb-muted">
+              <li><strong class="text-amber-300">1 – 7:</strong> Masukkan nada & maju otomatis</li>
+              <li><strong class="text-amber-300">. (Titik) / 0:</strong> Pin (perpanjang) / Diam</li>
+              <li><strong class="text-amber-300">Panah Atas/Bawah/Kiri/Kanan:</strong> Navigasi kursor</li>
+              <li><strong class="text-amber-300">Spasi:</strong> Putar / Jeda Playback</li>
+              <li><strong class="text-amber-300">V:</strong> Pindah Suara 1 (Atas) / Suara 2 (Bawah)</li>
+              <li><strong class="text-amber-300">Ctrl+Z:</strong> Undo langkah terakhir</li>
+              <li><strong class="text-amber-300">Ctrl+S / Ctrl+K:</strong> Simpan / Command Search</li>
+              <li><strong class="text-amber-300">Ctrl+Alt+K:</strong> Buka Rancakan Wilah Virtual</li>
+            </ul>
+          </div>
+          <div class="sb-card border rounded-xl p-3 space-y-1.5">
+            <div class="font-bold text-emerald-400">Panduan GitHub Pages & PWA</div>
+            <p class="text-[11px] sb-muted leading-relaxed">
+              Simpan file ini sebagai <code class="text-amber-300">index.html</code> di repositori GitHub Anda, lalu aktifkan <strong>Settings → Pages</strong>. Website langsung dapat diakses online maupun di-install sebagai aplikasi di Windows, Mac, Android, dan iPhone/iPad.
+            </p>
+            <p class="text-[11px] sb-muted leading-relaxed">
+              Untuk memakai rekaman audio asli milik Anda sendiri (`.wav`/`.mp3`), buka menu <strong>File → Sampel Audio Kustom</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: COMMAND SEARCH (CTRL+K) ==================== -->
+  <div id="modalCommandSearch" class="no-print hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-start justify-center pt-16 p-4">
+    <div class="sb-panel border rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden">
+      <div class="p-3 border-b border-slate-500/20 flex items-center gap-2">
+        <i class="fa-solid fa-magnifying-glass text-amber-500"></i>
+        <input id="commandSearchInput" type="text" placeholder="Ketik perintah Sibelius (misal: Gembyang, WAV, Panorama, Wilah)..." oninput="filterCommandSearch(this.value)" class="flex-1 bg-transparent text-xs sm:text-sm focus:outline-none" />
+        <button onclick="closeModal('modalCommandSearch')" class="text-xs sb-muted hover:text-amber-400 px-2 py-1">ESC</button>
+      </div>
+      <div id="commandSearchResults" class="max-h-72 overflow-y-auto p-2 space-y-1 text-xs">
+        <!-- Dirender dinamis -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: AUTO-GARAP KARAWITAN ==================== -->
+  <div id="modalAutoGarap" class="no-print hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="sb-panel border rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
+      <div class="sb-top px-4 py-3 border-b flex items-center justify-between">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i>
+          <span>Auto-Garap Karawitan & Kolotomik</span>
+        </h3>
+        <button onclick="closeModal('modalAutoGarap')" class="sb-muted hover:text-amber-400 px-2 py-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-4 space-y-2.5 text-xs">
+        <p class="sb-muted text-[11px] leading-relaxed">
+          Menyusun isian ricikan pengiring dan penanda struktural secara otomatis berdasarkan alur <strong>Balungan</strong> yang sudah ditulis (ala <em>Sibelius Arrange</em>):
+        </p>
+        <button onclick="autoGarapFromBalungan('kolotomik')" class="w-full p-3 rounded-xl sb-card border hover:border-amber-500 text-left transition flex items-center justify-between">
+          <div>
+            <div class="font-bold text-amber-400">1. Penanda Struktural (Gong, Kenong, Kempul, Kethuk)</div>
+            <div class="text-[11px] sb-muted mt-0.5">Mengisi ◯, ◡, ◠, +, - sesuai bentuk gending aktif</div>
+          </div>
+          <i class="fa-solid fa-chevron-right sb-muted"></i>
+        </button>
+        <button onclick="autoGarapFromBalungan('peking')" class="w-full p-3 rounded-xl sb-card border hover:border-amber-500 text-left transition flex items-center justify-between">
+          <div>
+            <div class="font-bold text-sky-400">2. Garap Peking / Saron Panerus (Nacah 2×)</div>
+            <div class="text-[11px] sb-muted mt-0.5">Memecah tiap nada balungan menjadi pukulan ganda ½ ketuk</div>
+          </div>
+          <i class="fa-solid fa-chevron-right sb-muted"></i>
+        </button>
+        <button onclick="autoGarapFromBalungan('slenthem')" class="w-full p-3 rounded-xl sb-card border hover:border-amber-500 text-left transition flex items-center justify-between">
+          <div>
+            <div class="font-bold text-emerald-400">3. Garap Slenthem (Balungan Oktaf Rendah)</div>
+            <div class="text-[11px] sb-muted mt-0.5">Menyalin melodi balungan ke register rendah dengan titik bawah (•)</div>
+          </div>
+          <i class="fa-solid fa-chevron-right sb-muted"></i>
+        </button>
+        <button onclick="autoGarapFromBalungan('bonang')" class="w-full p-3 rounded-xl sb-card border hover:border-amber-500 text-left transition flex items-center justify-between">
+          <div>
+            <div class="font-bold text-purple-400">4. Garap Bonang Barung (Gembyang Oktaf)</div>
+            <div class="text-[11px] sb-muted mt-0.5">Menyusun pola gembyang (Suara 1 + Suara 2) dari balungan</div>
+          </div>
+          <i class="fa-solid fa-chevron-right sb-muted"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 4: MANAJER SAMPEL AUDIO KUSTOM ==================== -->
+  <div id="modalSamples" class="no-print hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="sb-panel border rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="sb-top px-4 py-3 border-b flex items-center justify-between">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-wave-square text-amber-500"></i>
+          <span>Manajer Sampel Audio & Kode GitHub</span>
+        </h3>
+        <button onclick="closeModal('modalSamples')" class="sb-muted hover:text-amber-400 px-2 py-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
+        <p class="sb-muted text-[11px] leading-relaxed">
+          Unggah rekaman suara asli milik Anda (<code class="text-amber-400">.wav</code> / <code class="text-amber-400">.mp3</code> / <code class="text-amber-400">.ogg</code>) untuk menggantikan suara sintesis bawaan. Anda juga bisa mengunduh file pemetaan kode <code class="text-emerald-400">samples-map.js</code> untuk ditaruh di repositori GitHub Anda.
+        </p>
+
+        <div class="sb-card border rounded-xl p-3 space-y-2">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">Pilih Instrumen</label>
+              <select id="sampleTrackSelect" class="w-full px-2 py-1.5 rounded sb-input border text-xs font-semibold"></select>
+            </div>
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">Nada / Pukulan</label>
+              <select id="samplePitchSelect" class="w-full px-2 py-1.5 rounded sb-input border text-xs font-semibold">
+                <option value="1">Nada 1 (Ji / Do)</option>
+                <option value="2">Nada 2 (Ro / Re)</option>
+                <option value="3">Nada 3 (Lu / Mi)</option>
+                <option value="4">Nada 4 (Pat / Fa)</option>
+                <option value="5">Nada 5 (Ma / Sol)</option>
+                <option value="6">Nada 6 (Nem / La)</option>
+                <option value="7">Nada 7 (Pi / Si)</option>
+                <option value="P">Kendhang P (Thung)</option>
+                <option value="b">Kendhang b (Dhang)</option>
+                <option value="t">Kendhang t (Tak)</option>
+                <option value="◯">Gong Ageng (◯)</option>
+                <option value="◡">Kenong (◡)</option>
+                <option value="◠">Kempul (◠)</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] sb-muted block mb-0.5">File Audio Rekaman</label>
+              <label class="w-full py-1.5 px-2 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-center block cursor-pointer">
+                <i class="fa-solid fa-upload mr-1"></i>Pilih File
+                <input type="file" accept="audio/*" onchange="handleCustomSampleUpload(event)" class="hidden" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div id="customSamplesList" class="space-y-1.5">
+          <!-- Daftar sampel terpasang -->
+        </div>
+
+        <div class="pt-2 border-t border-slate-500/20 flex justify-between items-center">
+          <span class="text-[11px] sb-muted">Siap untuk di-commit ke GitHub Pages:</span>
+          <button onclick="downloadGitHubSamplesConfig()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold">
+            <i class="fa-solid fa-code mr-1"></i>Unduh samples-map.js
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 5: EKSPOR LENGKAP ==================== -->
+  <div id="modalExport" class="no-print hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="sb-panel border rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
+      <div class="sb-top px-4 py-3 border-b flex items-center justify-between">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-file-export text-sky-400"></i>
+          <span>Ekspor Partitur & Audio</span>
+        </h3>
+        <button onclick="closeModal('modalExport')" class="sb-muted hover:text-amber-400 px-2 py-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-4 space-y-2.5 text-xs">
+        <button onclick="exportScoreWav()" class="w-full p-3 rounded-xl sb-card border hover:border-emerald-500 text-left flex items-center justify-between transition">
+          <div>
+            <div class="font-bold text-emerald-400"><i class="fa-solid fa-file-audio mr-1.5"></i>Render Audio (.WAV)</div>
+            <div class="text-[11px] sb-muted mt-0.5">Merender seluruh instrumen & kolotomik menjadi file audio 16-bit WAV</div>
+          </div>
+          <i class="fa-solid fa-download sb-muted"></i>
+        </button>
+
+        <button onclick="exportScorePng()" class="w-full p-3 rounded-xl sb-card border hover:border-amber-500 text-left flex items-center justify-between transition">
+          <div>
+            <div class="font-bold text-amber-400"><i class="fa-solid fa-image mr-1.5"></i>Ekspor Gambar Partitur (.PNG)</div>
+            <div class="text-[11px] sb-muted mt-0.5">Menyimpan lembaran not angka resolusi tinggi siap dibagikan</div>
+          </div>
+          <i class="fa-solid fa-download sb-muted"></i>
+        </button>
+
+        <button onclick="exportScorePdf()" class="w-full p-3 rounded-xl sb-card border hover:border-rose-500 text-left flex items-center justify-between transition">
+          <div>
+            <div class="font-bold text-rose-400"><i class="fa-solid fa-file-pdf mr-1.5"></i>Cetak / Simpan sebagai PDF</div>
+            <div class="text-[11px] sb-muted mt-0.5">Membuka dialog cetak bersih tanpa panel antarmuka</div>
+          </div>
+          <i class="fa-solid fa-print sb-muted"></i>
+        </button>
+
+        <button onclick="exportScoreMidi()" class="w-full p-3 rounded-xl sb-card border hover:border-purple-500 text-left flex items-center justify-between transition">
+          <div>
+            <div class="font-bold text-purple-400"><i class="fa-solid fa-midi mr-1.5"></i>Ekspor Standard MIDI (.MID)</div>
+            <div class="text-[11px] sb-muted mt-0.5">Kompatibel untuk dibuka kembali di Avid Sibelius, MuseScore, atau DAW</div>
+          </div>
+          <i class="fa-solid fa-download sb-muted"></i>
+        </button>
+
+        <button onclick="exportProjectJson()" class="w-full p-3 rounded-xl sb-card border hover:border-sky-500 text-left flex items-center justify-between transition">
+          <div>
+            <div class="font-bold text-sky-400"><i class="fa-solid fa-file-code mr-1.5"></i>Simpan Berkas Proyek (.JSON)</div>
+            <div class="text-[11px] sb-muted mt-0.5">Menyimpan seluruh data partitur lengkap untuk diedit kembali nanti</div>
+          </div>
+          <i class="fa-solid fa-download sb-muted"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 6: TAMBAH RICIKAN / INSTRUMEN ==================== -->
+  <div id="modalAddTrack" class="no-print hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="sb-panel border rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
+      <div class="sb-top px-4 py-3 border-b flex items-center justify-between">
+        <h3 class="font-bold text-sm"><i class="fa-solid fa-plus-circle text-emerald-400 mr-1.5"></i>Tambah Ricikan / Instrumen</h3>
+        <button onclick="closeModal('modalAddTrack')" class="sb-muted hover:text-amber-400 px-2 py-1"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-4 grid grid-cols-2 gap-2 text-xs">
+        <button onclick="addInstrumentTrack('Demung', 'demung', 'bronze_low')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Demung</button>
+        <button onclick="addInstrumentTrack('Saron Barung', 'saron', 'bronze_mid')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Saron Barung</button>
+        <button onclick="addInstrumentTrack('Peking', 'peking', 'bronze_high')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Peking (Panerus)</button>
+        <button onclick="addInstrumentTrack('Slenthem', 'slenthem', 'bronze_sub')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Slenthem</button>
+        <button onclick="addInstrumentTrack('Bonang Barung', 'bonang', 'bonang')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Bonang Barung</button>
+        <button onclick="addInstrumentTrack('Bonang Panerus', 'bonang_p', 'bonang_high')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Bonang Panerus</button>
+        <button onclick="addInstrumentTrack('Gender Barung', 'gender', 'gender')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Gender Barung</button>
+        <button onclick="addInstrumentTrack('Gambang', 'gambang', 'wood')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Gambang</button>
+        <button onclick="addInstrumentTrack('Rebab', 'rebab', 'bowed')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Rebab</button>
+        <button onclick="addInstrumentTrack('Suling', 'suling', 'flute')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Suling</button>
+        <button onclick="addInstrumentTrack('Kendhang', 'kendhang', 'kendhang')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Kendhang Jawa</button>
+        <button onclick="addInstrumentTrack('Sindhen / Vokal', 'vocal', 'vocal')" class="p-2.5 rounded-xl sb-card border hover:border-amber-500 text-left font-bold">Sindhen / Vokal</button>
+        <button onclick="addInstrumentTrack('Piano / Keyboard', 'piano', 'piano')" class="p-2.5 rounded-xl sb-card border hover:border-sky-500 text-left font-bold text-sky-400">Piano (Barat)</button>
+        <button onclick="addInstrumentTrack('Bass / Cello', 'bass', 'bass')" class="p-2.5 rounded-xl sb-card border hover:border-sky-500 text-left font-bold text-sky-400">Bass (Barat)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toastContainer" class="no-print fixed bottom-12 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-1.5"></div>
+
+  <!-- ==================== SCRIPT UTAMA KEPATIHAN STUDIO ==================== -->
+  <script>
+    // ==================== STATE UTAMA APLIKASI ====================
+    const state = {
+      title: 'Lancaran Ricik-Ricik',
+      subtitle: 'Laras Slendro Pathet Manyura — Gaya Surakarta',
+      composer: 'Penata: Karawitan Studio',
+      systemMode: 'gamelan', // 'gamelan' | 'western'
+      gaya: 'surakarta', // 'surakarta' | 'yogyakarta' | 'jawatimuran'
+      laras: 'slendro', // 'slendro' | 'pelog' | 'gabungan'
+      gendingForm: 'lancaran', // 'lancaran' | 'ketawang' | 'ladrang' | 'srepegan' | 'bebas'
+      westernKey: 'Do = C',
+      beatsPerMeasure: 4,
+      measureCount: 8,
+      measuresPerSystem: 4,
+      tempo: 84,
+      halfSpeed: false,
+      loopGatra: false,
+      metronome: false,
+      theme: 'auto', // 'auto' | 'dark' | 'light'
+      paperStyle: 'paper-classic',
+      panoramaView: false,
+      reviewMode: false,
+      zoom: 1.0,
+      activeRibbonTab: 'home',
+      activePartTab: 'full', // 'full' | trackId
+      scoreSubset: 'all', // 'all' | 'balungan' | 'garap' | 'kendhang'
+      activeVoice: 1, // 1 (Atas) | 2 (Bawah)
+      activeLyricVerse: 1, // 1..5
+      selection: {
+        trackIdx: 0,
+        measureIdx: 0,
+        beatIdx: 0,
+        subIdx: 0
+      },
+      tracks: [],
+      colotomic: {}, // { globalBeat: '◯' | '◌' | '◡' | '◠' | '+' | '-' }
+      measureMarks: {}, // { measureIdx: { rehearsal: 'A', section: 'Ompak', expression: 'sirep', repeatStart: false, repeatEnd: false, comment: '' } }
+      customSamples: {}, // { 'trackId:pitch': { url, name } }
+      savedProjects: [],
+      undoStack: []
+    };
+
+    let audioCtx = null;
+    let isPlaying = false;
+    let playbackTimer = null;
+    let currentPlaybackStep = 0; // dalam resolusi 12 sub-ticks per ketuk (LCM dari 1, 2, 3, 4)
+
+    // ==================== HELPER DATA STRUKTUR ====================
+    function createEmptyNote() {
+      return {
+        val: '.',
+        octave: 0,
+        accidental: '', // '' | '/' | '\'
+        articulation: '' // '' | 'piles' | 'gregel' | 'plesedan' | 'accent'
+      };
+    }
+
+    function createEmptyCell(subdivision = 1) {
+      const notes = [];
+      const notesV2 = [];
+      for (let i = 0; i < subdivision; i++) {
+        notes.push(createEmptyNote());
+        notesV2.push(createEmptyNote());
+      }
+      return {
+        subdivision,
+        notes,
+        notesV2,
+        lyrics: { 1: '', 2: '', 3: '', 4: '', 5: '' }
+      };
+    }
+
+    function createTrack(name, role, timbre, pan = 0, volume = 0.85) {
+      const totalBeats = state.measureCount * state.beatsPerMeasure;
+      const cells = [];
+      for (let i = 0; i < totalBeats; i++) {
+        cells.push(createEmptyCell(1));
+      }
+      return {
+        id: 'trk_' + Math.random().toString(36).slice(2, 8),
+        name,
+        role,
+        timbre,
+        muted: false,
+        solo: false,
+        volume,
+        pan,
+        cells
+      };
+    }
+
+    function getActiveNoteObj(cell, subIdx = 0) {
+      const idx = Math.min(subIdx, cell.subdivision - 1);
+      if (state.activeVoice === 2) {
+        if (!cell.notesV2) cell.notesV2 = Array.from({ length: cell.subdivision }, createEmptyNote);
+        if (!cell.notesV2[idx]) cell.notesV2[idx] = createEmptyNote();
+        return cell.notesV2[idx];
+      }
+      if (!cell.notes[idx]) cell.notes[idx] = createEmptyNote();
+      return cell.notes[idx];
+    }
+
+    function pushUndoSnapshot() {
+      const snap = JSON.stringify({
+        tracks: state.tracks,
+        colotomic: state.colotomic,
+        measureMarks: state.measureMarks,
+        measureCount: state.measureCount
+      });
+      state.undoStack.push(snap);
+      if (state.undoStack.length > 30) state.undoStack.shift();
+    }
+
+    function undoLastAction() {
+      if (state.undoStack.length === 0) {
+        showToast('Tidak ada langkah untuk di-Undo');
+        return;
+      }
+      const prev = JSON.parse(state.undoStack.pop());
+      state.tracks = prev.tracks;
+      state.colotomic = prev.colotomic;
+      state.measureMarks = prev.measureMarks;
+      state.measureCount = prev.measureCount;
+      renderAll();
+      showToast('Undo berhasil');
+    }
+
+    // ==================== PRESET GENDING & MUSIK BARAT ====================
+    function loadPreset(presetKey, silent = false) {
+      stopPlayback();
+      state.undoStack = [];
+      state.colotomic = {};
+      state.measureMarks = {};
+      state.activePartTab = 'full';
+      state.scoreSubset = 'all';
+
+      if (presetKey === 'ricik_slendro') {
+        state.title = 'Lancaran Ricik-Ricik';
+        state.subtitle = 'Laras Slendro Pathet Manyura — Gaya Surakarta';
+        state.composer = 'Penata: Karawitan Jawa';
+        state.systemMode = 'gamelan';
+        state.gaya = 'surakarta';
+        state.laras = 'slendro';
+        state.gendingForm = 'lancaran';
+        state.beatsPerMeasure = 4;
+        state.measureCount = 8;
+        state.tempo = 88;
+
+        const demung = createTrack('Demung', 'demung', 'bronze_low', -0.25, 0.9);
+        const saron = createTrack('Saron Barung', 'saron', 'bronze_mid', 0.25, 0.85);
+        const peking = createTrack('Peking', 'peking', 'bronze_high', 0.45, 0.72);
+        const bonang = createTrack('Bonang Barung', 'bonang', 'bonang', -0.55, 0.8);
+        const kendhang = createTrack('Kendhang', 'kendhang', 'kendhang', 0.0, 0.95);
+
+        // Balungan Lancaran Ricik-Ricik (32 ketukan = 8 gatra)
+        const balunganSeq = [
+          '3','5','6','5',  '6','5','3','2',
+          '3','5','6','5',  '6','5','3','2',
+          '6','6','.','6',  '1','2','3','2',
+          '6','5','3','2',  '3','5','3','2'
+        ];
+        const octSeq = [
+          0,0,0,0, 0,0,0,0,
+          0,0,0,0, 0,0,0,0,
+          0,0,0,0, 1,1,1,1,
+          0,0,0,0, 0,0,0,0
+        ];
+        const kendhangSeq = [
+          'P','t','P','b', 'P','t','P','b',
+          'P','t','P','b', 'P','t','P','b',
+          'd','t','b','t', 'd','t','b','P',
+          't','b','t','b', 'P','t','b','P'
+        ];
+
+        balunganSeq.forEach((n, idx) => {
+          demung.cells[idx].notes[0] = { val: n, octave: octSeq[idx], accidental: '', articulation: '' };
+          saron.cells[idx].notes[0] = { val: n, octave: octSeq[idx], accidental: '', articulation: '' };
+
+          // Peking nacah 2x
+          peking.cells[idx] = createEmptyCell(2);
+          peking.cells[idx].notes[0] = { val: n, octave: octSeq[idx], accidental: '', articulation: '' };
+          peking.cells[idx].notes[1] = { val: n, octave: octSeq[idx], accidental: '', articulation: '' };
+
+          // Bonang gembyang
+          bonang.cells[idx].notes[0] = { val: n, octave: n === '.' ? 0 : 1, accidental: '', articulation: '' };
+          bonang.cells[idx].notesV2[0] = { val: n, octave: 0, accidental: '', articulation: '' };
+
+          // Kendhang
+          kendhang.cells[idx].notes[0] = { val: kendhangSeq[idx], octave: 0, accidental: '', articulation: '' };
+        });
+
+        // Kolotomik Lancaran
+        for (let gb = 0; gb < 32; gb++) {
+          const b = gb % 4;
+          const g = Math.floor(gb / 4);
+          if (b === 0 || b === 2) state.colotomic[gb] = '+';
+          if (b === 1) state.colotomic[gb] = '◠';
+          if (b === 3) state.colotomic[gb] = (g % 4 === 3) ? '◯' : '◡';
+        }
+
+        state.measureMarks[0] = { rehearsal: 'A', section: 'Ompak', expression: '', repeatStart: true, repeatEnd: false, comment: '' };
+        state.measureMarks[4] = { rehearsal: 'B', section: 'Ngelik', expression: '', repeatStart: false, repeatEnd: false, comment: '' };
+        state.measureMarks[7] = { rehearsal: '', section: '', expression: 'suwuk', repeatStart: false, repeatEnd: true, comment: '' };
+
+        state.tracks = [demung, saron, peking, bonang, kendhang];
+      } else if (presetKey === 'puspawarna') {
+        state.title = 'Ketawang Puspawarna';
+        state.subtitle = 'Laras Slendro Pathet Manyura — Gaya Surakarta';
+        state.composer = 'K.G.P.A.A. Mangkunegara IV';
+        state.systemMode = 'gamelan';
+        state.gaya = 'surakarta';
+        state.laras = 'slendro';
+        state.gendingForm = 'ketawang';
+        state.beatsPerMeasure = 4;
+        state.measureCount = 8;
+        state.tempo = 68;
+
+        const slenthem = createTrack('Slenthem', 'slenthem', 'bronze_sub', -0.35, 0.92);
+        const demung = createTrack('Demung', 'demung', 'bronze_low', -0.15, 0.85);
+        const gender = createTrack('Gender Barung', 'gender', 'gender', 0.35, 0.82);
+        const sindhen = createTrack('Sindhen / Gerong', 'vocal', 'vocal', 0.0, 0.95);
+
+        const seq = [
+          '.','3','.','2', '.','3','.','1',
+          '.','3','.','2', '.','5','.','6',
+          '.','1','.','6', '.','5','.','3',
+          '.','2','.','3', '.','2','.','1'
+        ];
+        const oct = [
+          0,0,0,0, 0,0,0,0,
+          0,0,0,0, 0,0,0,0,
+          0,1,0,0, 0,0,0,0,
+          0,0,0,0, 0,0,0,0
+        ];
+        const lyrics = [
+          '','Kembang','','kencur,', '','ka-','','cur',
+          '','pi-','','nang,', '','ganda','','ning',
+          '','se-','','kar,', '','se-','','kar',
+          '','me-','','la-', '','ti','','asri'
+        ];
+
+        seq.forEach((n, idx) => {
+          slenthem.cells[idx].notes[0] = { val: n, octave: n === '.' ? 0 : -1, accidental: '', articulation: '' };
+          demung.cells[idx].notes[0] = { val: n, octave: oct[idx], accidental: '', articulation: '' };
+          gender.cells[idx].notes[0] = { val: n, octave: oct[idx], accidental: '', articulation: '' };
+          gender.cells[idx].notesV2[0] = { val: n === '.' ? '.' : (n === '1' ? '5' : '2'), octave: -1, accidental: '', articulation: '' };
+          sindhen.cells[idx].notes[0] = { val: n, octave: oct[idx], accidental: '', articulation: n !== '.' ? 'gregel' : '' };
+          sindhen.cells[idx].lyrics[1] = lyrics[idx] || '';
+        });
+
+        for (let gb = 0; gb < 32; gb++) {
+          const b = gb % 4;
+          const g = Math.floor(gb / 4);
+          if (b === 0 || b === 2) state.colotomic[gb] = '-';
+          if (b === 1) state.colotomic[gb] = '+';
+          if (g % 2 === 1 && b === 3) state.colotomic[gb] = '◡';
+          if (g % 4 === 3 && b === 3) state.colotomic[gb] = '◯';
+        }
+
+        state.measureMarks[0] = { rehearsal: 'A', section: 'Ompak', expression: '', repeatStart: true, repeatEnd: false, comment: '' };
+        state.measureMarks[4] = { rehearsal: 'B', section: 'Ngelik (Sirep)', expression: 'sirep', repeatStart: false, repeatEnd: false, comment: 'Vokal Sindhen menonjol' };
+        state.tracks = [slenthem, demung, gender, sindhen];
+      } else if (presetKey === 'wilujeng_pelog') {
+        state.title = 'Ladrang Wilujeng';
+        state.subtitle = 'Laras Pelog Pathet Barang — Gaya Yogyakarta';
+        state.composer = 'Tradisi Karawitan Mataram';
+        state.systemMode = 'gamelan';
+        state.gaya = 'yogyakarta';
+        state.laras = 'pelog';
+        state.gendingForm = 'ladrang';
+        state.beatsPerMeasure = 4;
+        state.measureCount = 8;
+        state.tempo = 74;
+
+        const demung = createTrack('Demung', 'demung', 'bronze_low', -0.2, 0.9);
+        const saron = createTrack('Saron Ricik', 'saron', 'bronze_mid', 0.2, 0.85);
+        const kendhang = createTrack('Kendhang Satunggal', 'kendhang', 'kendhang', 0.0, 0.92);
+
+        const seq = [
+          '2','7','2','3', '2','7','5','6',
+          '3','3','.','.', '6','5','3','2',
+          '5','6','5','3', '2','7','5','6',
+          '2','7','2','3', '2','7','5','6'
+        ];
+        seq.forEach((n, idx) => {
+          demung.cells[idx].notes[0] = { val: n, octave: 0, accidental: '', articulation: '' };
+          saron.cells[idx].notes[0] = { val: n, octave: 0, accidental: '', articulation: '' };
+          kendhang.cells[idx].notes[0] = { val: idx % 4 === 3 ? 'P' : (idx % 2 === 1 ? 'b' : 't'), octave: 0, accidental: '', articulation: '' };
+        });
+
+        for (let gb = 0; gb < 32; gb++) {
+          const b = gb % 4;
+          const g = Math.floor(gb / 4);
+          if (b === 0 || b === 2) state.colotomic[gb] = '-';
+          if (b === 1) state.colotomic[gb] = '+';
+          if (g % 2 === 1 && b === 3) state.colotomic[gb] = '◡';
+          if ((g === 3 || g === 5 || g === 7) && b === 1) state.colotomic[gb] = '◠';
+          if (g === 7 && b === 3) state.colotomic[gb] = '◯';
+        }
+        state.measureMarks[0] = { rehearsal: 'A', section: 'Ompak', expression: '', repeatStart: true, repeatEnd: true, comment: '' };
+        state.tracks = [demung, saron, kendhang];
+      } else if (presetKey === 'jatim_slendro') {
+        state.title = 'Lancaran Gula Klapa';
+        state.subtitle = 'Laras Slendro Embat Jawi Wetanan — Gaya Jawa Timuran';
+        state.composer = 'Tradisi Karawitan Jawi Wetanan';
+        state.systemMode = 'gamelan';
+        state.gaya = 'jawatimuran';
+        state.laras = 'slendro';
+        state.gendingForm = 'lancaran';
+        state.beatsPerMeasure = 4;
+        state.measureCount = 4;
+        state.tempo = 98;
+
+        const demung = createTrack('Demung', 'demung', 'bronze_low', -0.25, 0.9);
+        const saron = createTrack('Saron', 'saron', 'bronze_mid', 0.25, 0.88);
+        const kendhang = createTrack('Kendhang Ngremo', 'kendhang', 'kendhang', 0.0, 0.98);
+
+        const seq = ['5','3','5','6', '5','3','2','1', '2','3','5','6', '5','3','2','1'];
+        const kSeq = ['P','b','t','b', 'd','t','b','P', 'P','b','t','b', 'd','k','b','P'];
+        seq.forEach((n, idx) => {
+          demung.cells[idx].notes[0] = { val: n, octave: 0, accidental: '', articulation: '' };
+          saron.cells[idx].notes[0] = { val: n, octave: 0, accidental: '', articulation: '' };
+          kendhang.cells[idx].notes[0] = { val: kSeq[idx], octave: 0, accidental: '', articulation: 'accent' };
+        });
+        for (let gb = 0; gb < 16; gb++) {
+          if (gb % 4 === 1) state.colotomic[gb] = '◠';
+          if (gb % 4 === 3) state.colotomic[gb] = gb === 15 ? '◯' : '◡';
+        }
+        state.tracks = [demung, saron, kendhang];
+      } else if (presetKey === 'gabungan_campursari') {
+        state.title = 'Kreasi Gabungan Slendro – Pelog';
+        state.subtitle = 'Eksplorasi Transisi Laras Slendro & Pelog';
+        state.composer = 'Komposisi Kontemporer';
+        state.systemMode = 'gamelan';
+        state.gaya = 'surakarta';
+        state.laras = 'gabungan';
+        state.gendingForm = 'bebas';
+        state.beatsPerMeasure = 4;
+        state.measureCount = 4;
+        state.tempo = 80;
+
+        const saron = createTrack('Saron Gabungan', 'saron', 'bronze_mid', -0.2, 0.9);
+        const gender = createTrack('Gender Gabungan', 'gender', 'gender', 0.25, 0.85);
+        const seq = ['3','5','6','1', '7','6','5','4', '3','4','5','7', '6','5','3','2'];
+        const oct = [0,0,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+        seq.forEach((n, idx) => {
+          saron.cells[idx].notes[0] = { val: n, octave: oct[idx], accidental: '', articulation: '' };
+          gender.cells[idx].notes[0] = { val: n, octave: oct[idx], accidental: '', articulation: '' };
+        });
+        state.colotomic[7] = '◡';
+        state.colotomic[15] = '◯';
+        state.tracks = [saron, gender];
+      } else if (presetKey === 'western_choir') {
+        state.title = 'Ode Kegembiraan (Not Angka Barat)';
+        state.subtitle = 'Aransemen Melodi & Harmoni Diatonis';
+        state.composer = 'L. v. Beethoven / Adaptasi';
+        state.systemMode = 'western';
+        state.westernKey = 'Do = C';
+        state.beatsPerMeasure = 4;
+        state.measureCount = 4;
+        state.tempo = 104;
+
+        const soprano = createTrack('Melodi / Sopran', 'vocal', 'vocal', -0.2, 0.9);
+        const piano = createTrack('Piano Pengiring', 'piano', 'piano', 0.2, 0.85);
+        const bass = createTrack('Bass', 'bass', 'bass', 0.0, 0.88);
+
+        const mel = ['3','3','4','5', '5','4','3','2', '1','1','2','3', '3','2','2','.'];
+        const bas = ['1','.','5','.','1','.','5','.','1','.','4','.','5','.','1','.'];
+        const lyr = ['Ma-','ri','ki-','ta', 'ber-','nya-','nyi','ri-', 'ang','da-','lam','ha-', 'ti','yang','da-','mai'];
+
+        mel.forEach((n, idx) => {
+          soprano.cells[idx].notes[0] = { val: n, octave: 0, accidental: '', articulation: '' };
+          soprano.cells[idx].lyrics[1] = lyr[idx] || '';
+          piano.cells[idx].notes[0] = { val: n, octave: 0, accidental: '', articulation: '' };
+          piano.cells[idx].notesV2[0] = { val: bas[idx], octave: -1, accidental: '', articulation: '' };
+          bass.cells[idx].notes[0] = { val: bas[idx], octave: -1, accidental: '', articulation: '' };
+        });
+        state.tracks = [soprano, piano, bass];
+      }
+
+      state.selection = { trackIdx: 0, measureIdx: 0, beatIdx: 0, subIdx: 0 };
+      syncControlsFromState();
+      renderAll();
+      if (!silent) showToast(`Memuat templat: ${state.title}`);
+    }
+
+    function loadPresetAndClose(key) {
+      loadPreset(key, false);
+      closeQuickStart();
+    }
+
+    function createBlankScoreFromQS() {
+      const title = document.getElementById('qsNewTitle').value.trim() || 'Gending Baru';
+      const composer = document.getElementById('qsNewComposer').value.trim() || 'Penata';
+      const sys = document.getElementById('qsNewSystem').value;
+      const measures = Math.max(2, Math.min(64, parseInt(document.getElementById('qsNewMeasures').value, 10) || 8));
+
+      state.title = title;
+      state.composer = composer;
+      state.systemMode = sys;
+      state.measureCount = measures;
+      state.colotomic = {};
+      state.measureMarks = {};
+      state.activePartTab = 'full';
+
+      if (sys === 'western') {
+        state.subtitle = `${state.westernKey} • Birama ${state.beatsPerMeasure}/4`;
+        state.tracks = [
+          createTrack('Melodi Utama', 'vocal', 'vocal', -0.2, 0.9),
+          createTrack('Piano', 'piano', 'piano', 0.2, 0.85)
+        ];
+      } else {
+        state.subtitle = `Laras ${state.laras.toUpperCase()} — Gaya ${state.gaya.toUpperCase()}`;
+        state.tracks = [
+          createTrack('Demung', 'demung', 'bronze_low', -0.25, 0.9),
+          createTrack('Saron Barung', 'saron', 'bronze_mid', 0.25, 0.85),
+          createTrack('Kendhang', 'kendhang', 'kendhang', 0.0, 0.9)
+        ];
+      }
+
+      state.selection = { trackIdx: 0, measureIdx: 0, beatIdx: 0, subIdx: 0 };
+      syncControlsFromState();
+      renderAll();
+      closeQuickStart();
+      showToast(`Partitur baru "${title}" siap ditulis`);
+    }
+
+    // ==================== RENDER RIBBON & KONTROL ====================
+    function switchRibbonTab(tab) {
+      state.activeRibbonTab = tab;
+      document.querySelectorAll('.ribbon-tab-btn').forEach(btn => {
+        const active = btn.dataset.ribbonTab === tab;
+        btn.className = active
+          ? 'ribbon-tab-btn px-2.5 py-1 rounded-md font-bold bg-amber-500/20 text-amber-400 transition'
+          : 'ribbon-tab-btn px-2.5 py-1 rounded-md font-bold sb-muted hover:text-amber-400 transition';
+      });
+      renderRibbonContent();
+    }
+
+    function renderRibbonContent() {
+      const el = document.getElementById('ribbonContent');
+      if (!el) return;
+      const t = state.activeRibbonTab;
+
+      if (t === 'file') {
+        el.innerHTML = `
+          <button onclick="openQuickStart()" class="px-2.5 py-1 rounded sb-card border hover:border-amber-500 font-semibold shrink-0"><i class="fa-solid fa-house text-amber-400 mr-1"></i>Quick Start</button>
+          <button onclick="saveCurrentProject()" class="px-2.5 py-1 rounded sb-card border hover:border-emerald-500 font-semibold shrink-0"><i class="fa-solid fa-floppy-disk text-emerald-400 mr-1"></i>Simpan Versi (Ctrl+S)</button>
+          <button onclick="openModal('modalSamples')" class="px-2.5 py-1 rounded sb-card border hover:border-amber-500 font-semibold shrink-0"><i class="fa-solid fa-wave-square text-amber-400 mr-1"></i>Sampel Audio Kustom</button>
+          <button onclick="exportScoreWav()" class="px-2.5 py-1 rounded sb-card border hover:border-emerald-500 font-semibold shrink-0"><i class="fa-solid fa-file-audio text-emerald-400 mr-1"></i>Ekspor WAV</button>
+          <button onclick="exportScorePng()" class="px-2.5 py-1 rounded sb-card border hover:border-sky-500 font-semibold shrink-0"><i class="fa-solid fa-image text-sky-400 mr-1"></i>Ekspor PNG</button>
+          <button onclick="exportScorePdf()" class="px-2.5 py-1 rounded sb-card border hover:border-rose-500 font-semibold shrink-0"><i class="fa-solid fa-print text-rose-400 mr-1"></i>Cetak / PDF</button>
+          <button onclick="exportScoreMidi()" class="px-2.5 py-1 rounded sb-card border hover:border-purple-500 font-semibold shrink-0"><i class="fa-solid fa-music text-purple-400 mr-1"></i>Ekspor MIDI</button>
+        `;
+      } else if (t === 'home') {
+        el.innerHTML = `
+          <button onclick="undoLastAction()" class="px-2.5 py-1 rounded sb-card border hover:border-amber-500 font-semibold shrink-0"><i class="fa-solid fa-rotate-left text-amber-400 mr-1"></i>Undo</button>
+          <button onclick="copyCurrentMeasure()" class="px-2.5 py-1 rounded sb-card border hover:border-sky-500 font-semibold shrink-0"><i class="fa-solid fa-copy text-sky-400 mr-1"></i>Salin Gatra</button>
+          <button onclick="pasteCurrentMeasure()" class="px-2.5 py-1 rounded sb-card border hover:border-sky-500 font-semibold shrink-0"><i class="fa-solid fa-paste text-sky-400 mr-1"></i>Tempel Gatra</button>
+          <button onclick="clearCurrentMeasure()" class="px-2.5 py-1 rounded sb-card border hover:border-rose-500 font-semibold shrink-0"><i class="fa-solid fa-eraser text-rose-400 mr-1"></i>Kosongkan Gatra</button>
+          <div class="h-4 w-px bg-slate-500/30 mx-0.5"></div>
+          <button onclick="addMeasure(1)" class="px-2.5 py-1 rounded sb-card border hover:border-emerald-500 font-semibold shrink-0"><i class="fa-solid fa-plus text-emerald-400 mr-1"></i>Tambah Gatra</button>
+          <button onclick="removeLastMeasure()" class="px-2.5 py-1 rounded sb-card border hover:border-rose-500 font-semibold shrink-0"><i class="fa-solid fa-minus text-rose-400 mr-1"></i>Hapus Gatra</button>
+          <button onclick="openModal('modalAddTrack')" class="px-2.5 py-1 rounded bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 font-bold shrink-0"><i class="fa-solid fa-drum mr-1"></i>+ Ricikan</button>
+        `;
+      } else if (t === 'note') {
+        el.innerHTML = `
+          <button onclick="toggleActiveVoice()" class="px-2.5 py-1 rounded sb-card border hover:border-sky-400 font-bold text-sky-400 shrink-0">Suara Aktif: V${state.activeVoice}</button>
+          <button onclick="applyVerticalInterval('gembyang')" class="px-2.5 py-1 rounded sb-card border hover:border-amber-400 font-semibold shrink-0">+ Gembyang (8vb)</button>
+          <button onclick="applyVerticalInterval('kempyung')" class="px-2.5 py-1 rounded sb-card border hover:border-purple-400 font-semibold shrink-0">+ Kempyung</button>
+          <button onclick="transposeTrackOrCell(1)" class="px-2.5 py-1 rounded sb-card border hover:border-amber-400 font-semibold shrink-0">Geser Wilah +1</button>
+          <button onclick="transposeTrackOrCell(-1)" class="px-2.5 py-1 rounded sb-card border hover:border-amber-400 font-semibold shrink-0">Geser Wilah -1</button>
+          <button onclick="openModal('modalAutoGarap')" class="px-2.5 py-1 rounded bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 font-bold shrink-0"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Auto-Garap</button>
+          <button onclick="toggleVirtualWilahBar()" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold shrink-0"><i class="fa-solid fa-bars-staggered mr-1"></i>Wilah Virtual</button>
+        `;
+      } else if (t === 'notations') {
+        el.innerHTML = `
+          <span class="text-[10px] sb-muted font-bold shrink-0">Kolotomik:</span>
+          <button onclick="setColotomicAtSelection('◯')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">◯ Gong</button>
+          <button onclick="setColotomicAtSelection('◌')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">◌ Suwukan</button>
+          <button onclick="setColotomicAtSelection('◡')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">◡ Kenong</button>
+          <button onclick="setColotomicAtSelection('◠')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">◠ Kempul</button>
+          <button onclick="setColotomicAtSelection('+')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">+ Kethuk</button>
+          <button onclick="setColotomicAtSelection('-')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">- Kempyang</button>
+          <button onclick="setColotomicAtSelection('')" class="px-2 py-1 rounded sb-card border hover:border-rose-500 text-rose-400 font-bold shrink-0">Hapus</button>
+          <div class="h-4 w-px bg-slate-500/30 mx-0.5"></div>
+          <span class="text-[10px] sb-muted font-bold shrink-0">Artikulasi:</span>
+          <button onclick="toggleArticulation('piles')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">× Piles</button>
+          <button onclick="toggleArticulation('gregel')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">~ Gregel</button>
+          <button onclick="toggleArticulation('plesedan')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">↗ Plèsèdan</button>
+          <button onclick="toggleArticulation('accent')" class="px-2 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0">&gt; Aksen</button>
+        `;
+      } else if (t === 'text') {
+        el.innerHTML = `
+          <button onclick="cycleRehearsalMark()" class="px-2.5 py-1 rounded sb-card border hover:border-amber-500 font-bold shrink-0"><i class="fa-solid fa-bookmark text-amber-400 mr-1"></i>Tanda Latihan [A-Z]</button>
+          <button onclick="setMeasureSection('Buka')" class="px-2 py-1 rounded sb-card border hover:border-sky-400 font-semibold shrink-0">Buka</button>
+          <button onclick="setMeasureSection('Ompak')" class="px-2 py-1 rounded sb-card border hover:border-sky-400 font-semibold shrink-0">Ompak</button>
+          <button onclick="setMeasureSection('Ngelik')" class="px-2 py-1 rounded sb-card border hover:border-sky-400 font-semibold shrink-0">Ngelik</button>
+          <button onclick="toggleMeasureRepeat('start')" class="px-2 py-1 rounded sb-card border hover:border-amber-400 font-bold shrink-0">||: Ulang</button>
+          <button onclick="toggleMeasureRepeat('end')" class="px-2 py-1 rounded sb-card border hover:border-amber-400 font-bold shrink-0">:|| Tutup</button>
+          <div class="h-4 w-px bg-slate-500/30 mx-0.5"></div>
+          <span class="text-[10px] sb-muted font-bold shrink-0">Ayat Lirik:</span>
+          ${[1,2,3,4,5].map(v => `<button onclick="setActiveLyricVerse(${v})" class="px-2 py-1 rounded ${state.activeLyricVerse === v ? 'bg-amber-500 text-slate-950' : 'sb-card border'} font-bold shrink-0">${v}</button>`).join('')}
+        `;
+      } else if (t === 'play') {
+        el.innerHTML = `
+          <button onclick="togglePlayback()" class="px-2.5 py-1 rounded bg-emerald-600 text-white font-bold shrink-0"><i class="fa-solid fa-play mr-1"></i>Putar / Jeda</button>
+          <button onclick="scrubCurrentBeat()" class="px-2.5 py-1 rounded sb-card border hover:border-amber-500 font-semibold shrink-0"><i class="fa-solid fa-ear-listen text-amber-400 mr-1"></i>Scrub Audisi Ketukan</button>
+          <button onclick="toggleMetronome()" class="px-2.5 py-1 rounded sb-card border ${state.metronome ? 'border-amber-500 text-amber-400' : ''} font-semibold shrink-0"><i class="fa-solid fa-stopwatch mr-1"></i>Metronom: ${state.metronome ? 'ON' : 'OFF'}</button>
+          <button onclick="handleTapTempo()" class="px-2.5 py-1 rounded sb-card border hover:border-sky-400 font-semibold shrink-0"><i class="fa-solid fa-hand-pointer text-sky-400 mr-1"></i>Tap Tempo</button>
+          <div class="h-4 w-px bg-slate-500/30 mx-0.5"></div>
+          <span class="text-[10px] sb-muted font-bold shrink-0">Dinamika Gatra:</span>
+          <button onclick="setMeasureExpression('sirep')" class="px-2 py-1 rounded sb-card border hover:border-purple-400 font-semibold shrink-0">Sirep</button>
+          <button onclick="setMeasureExpression('uwal')" class="px-2 py-1 rounded sb-card border hover:border-emerald-400 font-semibold shrink-0">Uwal</button>
+          <button onclick="setMeasureExpression('seseg')" class="px-2 py-1 rounded sb-card border hover:border-amber-400 font-semibold shrink-0">Seseg</button>
+          <button onclick="setMeasureExpression('suwuk')" class="px-2 py-1 rounded sb-card border hover:border-rose-400 font-semibold shrink-0">Suwuk</button>
+          <button onclick="setMeasureExpression('')" class="px-2 py-1 rounded sb-card border sb-muted font-semibold shrink-0">Normal</button>
+        `;
+      } else if (t === 'layout') {
+        el.innerHTML = `
+          <span class="text-[10px] sb-muted font-bold shrink-0">Gatra/Baris:</span>
+          ${[2,4,8].map(n => `<button onclick="setMeasuresPerSystem(${n})" class="px-2 py-1 rounded ${state.measuresPerSystem === n ? 'bg-amber-500 text-slate-950' : 'sb-card border'} font-bold shrink-0">${n}</button>`).join('')}
+          <div class="h-4 w-px bg-slate-500/30 mx-0.5"></div>
+          <span class="text-[10px] sb-muted font-bold shrink-0">Subset:</span>
+          <select onchange="setScoreSubset(this.value)" class="px-2 py-1 rounded sb-input border text-xs font-semibold shrink-0">
+            <option value="all" ${state.scoreSubset==='all'?'selected':''}>Semua Ricikan</option>
+            <option value="balungan" ${state.scoreSubset==='balungan'?'selected':''}>Balungan Saja</option>
+            <option value="garap" ${state.scoreSubset==='garap'?'selected':''}>Garap & Vokal</option>
+            <option value="kendhang" ${state.scoreSubset==='kendhang'?'selected':''}>Kendhang & Balungan</option>
+          </select>
+          <span class="text-[10px] sb-muted font-bold shrink-0">Kertas:</span>
+          <select onchange="setPaperStyle(this.value)" class="px-2 py-1 rounded sb-input border text-xs font-semibold shrink-0">
+            <option value="paper-classic" ${state.paperStyle==='paper-classic'?'selected':''}>Putih Klasik</option>
+            <option value="paper-ivory" ${state.paperStyle==='paper-ivory'?'selected':''}>Gading Manuskrip</option>
+            <option value="paper-manuscript" ${state.paperStyle==='paper-manuscript'?'selected':''}>Kertas Kepatihan</option>
+            <option value="paper-blueprint" ${state.paperStyle==='paper-blueprint'?'selected':''}>Cetak Biru</option>
+          </select>
+          <button onclick="toggleReviewMode()" class="px-2.5 py-1 rounded sb-card border ${state.reviewMode ? 'border-rose-500 text-rose-400' : ''} font-bold shrink-0"><i class="fa-solid fa-lock mr-1"></i>Review Mode</button>
+        `;
+      }
+    }
+
+    // ==================== RENDER DYNAMIC PART TABS, MIXER, NAVIGATOR ====================
+    function renderDynamicPartTabs() {
+      const el = document.getElementById('dynamicPartTabs');
+      if (!el) return;
+      const tabs = [
+        { id: 'full', label: 'Full Score', icon: 'fa-layer-group' },
+        ...state.tracks.map(t => ({ id: t.id, label: t.name, icon: 'fa-music' }))
+      ];
+      el.innerHTML = tabs.map(tab => {
+        const active = state.activePartTab === tab.id;
+        return `
+          <button onclick="setActivePartTab('${tab.id}')" class="px-2.5 py-1 rounded-t-lg text-[11px] font-bold flex items-center gap-1.5 shrink-0 transition ${active ? 'bg-amber-500 text-slate-950' : 'sb-card sb-muted hover:text-amber-400'}">
+            <i class="fa-solid ${tab.icon} text-[10px]"></i>
+            <span>${tab.label}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setActivePartTab(tabId) {
+      state.activePartTab = tabId;
+      if (tabId !== 'full') {
+        const idx = state.tracks.findIndex(t => t.id === tabId);
+        if (idx >= 0) state.selection.trackIdx = idx;
+      }
+      renderAll();
+    }
+
+    function renderMixerAndNavigator() {
+      // Navigator Gatra
+      const navGrid = document.getElementById('gatraNavigatorGrid');
+      const navTotal = document.getElementById('navTotalGatra');
+      if (navTotal) navTotal.textContent = `${state.measureCount} Gatra`;
+      if (navGrid) {
+        let html = '';
+        for (let m = 0; m < state.measureCount; m++) {
+          const isSel = state.selection.measureIdx === m;
+          const mark = state.measureMarks[m] || {};
+          const tag = mark.rehearsal ? `[${mark.rehearsal}]` : (mark.section ? mark.section.slice(0, 4) : `G${m + 1}`);
+          html += `
+            <button onclick="jumpToMeasure(${m})" class="px-1.5 py-1 rounded text-[10px] font-bold border transition truncate ${isSel ? 'bg-amber-500 text-slate-950 border-amber-400' : 'sb-input hover:border-amber-500'}">
+              ${tag}
+            </button>
+          `;
+        }
+        navGrid.innerHTML = html;
+      }
+
+      // Mixer List
+      const mixerList = document.getElementById('mixerTrackList');
+      if (mixerList) {
+        mixerList.innerHTML = state.tracks.map((trk, idx) => `
+          <div class="sb-input border rounded-lg p-2 space-y-1.5">
+            <div class="flex items-center justify-between gap-1">
+              <span class="font-bold text-[11px] truncate">${trk.name}</span>
+              <div class="flex items-center gap-1 shrink-0">
+                <button onclick="toggleTrackMute(${idx})" class="w-5 h-5 rounded text-[10px] font-extrabold ${trk.muted ? 'bg-rose-600 text-white' : 'sb-card sb-muted'}" title="Mute">M</button>
+                <button onclick="toggleTrackSolo(${idx})" class="w-5 h-5 rounded text-[10px] font-extrabold ${trk.solo ? 'bg-amber-500 text-slate-950' : 'sb-card sb-muted'}" title="Solo">S</button>
+                ${state.tracks.length > 1 ? `<button onclick="removeTrack(${idx})" class="w-5 h-5 rounded text-[10px] sb-card text-rose-400 hover:bg-rose-600 hover:text-white" title="Hapus Ricikan"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-[10px] sb-muted">
+              <span>Vol</span>
+              <input type="range" min="0" max="1" step="0.05" value="${trk.volume}" oninput="setTrackVolume(${idx}, this.value)" class="flex-1 accent-amber-500 h-1" />
+              <span>Pan</span>
+              <input type="range" min="-1" max="1" step="0.1" value="${trk.pan}" oninput="setTrackPan(${idx}, this.value)" class="w-14 accent-sky-400 h-1" />
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // ==================== RENDER KERTAS PARTITUR (ENGRAVING ENGINE) ====================
+    function getFilteredTracksForView() {
+      if (state.activePartTab !== 'full') {
+        const single = state.tracks.find(t => t.id === state.activePartTab);
+        return single ? [single] : state.tracks;
+      }
+      if (state.scoreSubset === 'balungan') {
+        const f = state.tracks.filter(t => ['demung', 'saron', 'slenthem'].includes(t.role));
+        return f.length ? f : state.tracks;
+      }
+      if (state.scoreSubset === 'garap') {
+        const f = state.tracks.filter(t => ['peking', 'bonang', 'bonang_p', 'gender', 'gambang', 'rebab', 'suling', 'vocal'].includes(t.role));
+        return f.length ? f : state.tracks;
+      }
+      if (state.scoreSubset === 'kendhang') {
+        const f = state.tracks.filter(t => ['kendhang', 'demung', 'saron'].includes(t.role));
+        return f.length ? f : state.tracks;
+      }
+      return state.tracks;
+    }
+
+    function formatSingleNoteGlyph(noteObj) {
+      if (!noteObj || noteObj.val === '' || noteObj.val === undefined) return '&nbsp;';
+      let v = String(noteObj.val);
+      // Tanda kromatik Barat (/ atau \)
+      if (noteObj.accidental === '/') v = v + '&#8242;';
+      if (noteObj.accidental === '\\') v = v + '&#9837;';
+
+      // Titik oktaf atas / bawah
+      const oct = noteObj.octave || 0;
+      let dotTop = '';
+      let dotBottom = '';
+      if (oct >= 1) dotTop = oct === 1 ? '•' : '••';
+      if (oct <= -1) dotBottom = oct === -1 ? '•' : '••';
+
+      // Artikulasi
+      let artBadge = '';
+      if (noteObj.articulation === 'piles') artBadge = '<span class="text-[9px] text-rose-600 font-extrabold ml-0.5">×</span>';
+      else if (noteObj.articulation === 'gregel') artBadge = '<span class="text-[10px] text-emerald-700 font-bold ml-0.5">~</span>';
+      else if (noteObj.articulation === 'plesedan') artBadge = '<span class="text-[9px] text-sky-700 font-bold ml-0.5">↗</span>';
+      else if (noteObj.articulation === 'accent') artBadge = '<span class="text-[9px] text-amber-700 font-extrabold ml-0.5">&gt;</span>';
+
+      return `
+        <span class="inline-flex flex-col items-center leading-none">
+          <span class="text-[9px] h-2 leading-none font-extrabold">${dotTop}</span>
+          <span class="inline-flex items-center">${v}${artBadge}</span>
+          <span class="text-[9px] h-2 leading-none font-extrabold">${dotBottom}</span>
+        </span>
+      `;
+    }
+
+    function renderScore() {
+      const container = document.getElementById('scoreSystemsContainer');
+      if (!container) return;
+
+      // Update Header Meta
+      const sysTag = document.getElementById('paperSystemTag');
+      const formTag = document.getElementById('paperFormTag');
+      const hTitle = document.getElementById('scoreHeaderTitle');
+      const hSub = document.getElementById('scoreHeaderSubtitle');
+      const hComp = document.getElementById('scoreHeaderComposer');
+      const hTempo = document.getElementById('scoreHeaderTempo');
+
+      if (sysTag) {
+        sysTag.textContent = state.systemMode === 'gamelan'
+          ? `Notasi Kepatihan • ${state.laras.toUpperCase()} • ${state.gaya.toUpperCase()}`
+          : `Notasi Angka Diatonis • ${state.westernKey} • ${state.beatsPerMeasure}/4`;
+      }
+      if (formTag) {
+        formTag.textContent = state.systemMode === 'gamelan' ? state.gendingForm.toUpperCase() : `Birama ${state.beatsPerMeasure}/4`;
+      }
+      if (hTitle && document.activeElement !== hTitle) hTitle.textContent = state.title;
+      if (hSub && document.activeElement !== hSub) hSub.textContent = state.subtitle;
+      if (hComp && document.activeElement !== hComp) hComp.textContent = state.composer;
+      if (hTempo) {
+        const speedText = state.halfSpeed ? ' (0.5× Latihan)' : '';
+        hTempo.textContent = `♩ = ${state.tempo}${speedText}`;
+      }
+
+      const visibleTracks = getFilteredTracksForView();
+      const perSys = state.panoramaView ? state.measureCount : state.measuresPerSystem;
+      const systemCount = Math.ceil(state.measureCount / perSys);
+
+      container.innerHTML = '';
+
+      for (let s = 0; s < systemCount; s++) {
+        const startM = s * perSys;
+        const endM = Math.min(state.measureCount, startM + perSys);
+        const cols = endM - startM;
+
+        const sysWrapper = document.createElement('div');
+        sysWrapper.className = 'system-bracket space-y-1.5';
+
+        // Baris Penanda Bagian, Rehearsal Mark, & Kolotomik (Gong/Kenong/Kempul)
+        const topMetaRow = document.createElement('div');
+        topMetaRow.className = 'flex items-end';
+        topMetaRow.innerHTML = `<div class="w-24 sm:w-32 shrink-0 text-[9px] font-bold uppercase tracking-wider text-slate-400 pr-2">${state.systemMode === 'gamelan' ? 'Kolotomik' : 'Bagian'}</div>`;
+
+        const metaGrid = document.createElement('div');
+        metaGrid.className = 'flex-1 grid gap-1';
+        metaGrid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+        for (let m = startM; m < endM; m++) {
+          const mark = state.measureMarks[m] || {};
+          const mCell = document.createElement('div');
+          mCell.className = 'flex flex-col justify-end px-1';
+
+          // Rehearsal & Section Badges
+          let badges = '';
+          if (mark.rehearsal) badges += `<span class="px-1.5 py-0.2 border border-slate-900 font-extrabold text-[10px] bg-amber-200 text-slate-950 mr-1">${mark.rehearsal}</span>`;
+          if (mark.section) badges += `<span class="text-[10px] font-bold text-slate-700 italic mr-1">${mark.section}</span>`;
+          if (mark.expression) badges += `<span class="text-[9px] font-extrabold uppercase px-1 rounded bg-purple-100 text-purple-800">${mark.expression}</span>`;
+          if (mark.comment) badges += `<span class="text-[9px] text-rose-600 ml-1" title="${mark.comment}"><i class="fa-solid fa-comment-dots"></i></span>`;
+
+          // Kolotomik per beat dalam gatra ini
+          let coloHtml = `<div class="grid gap-0.5 mt-0.5" style="grid-template-columns: repeat(${state.beatsPerMeasure}, minmax(0, 1fr))">`;
+          for (let b = 0; b < state.beatsPerMeasure; b++) {
+            const gb = m * state.beatsPerMeasure + b;
+            const sym = state.colotomic[gb] || '';
+            const symColor = sym === '◯' ? 'text-rose-600 font-extrabold text-sm'
+              : sym === '◡' ? 'text-amber-700 font-extrabold text-xs'
+              : sym === '◠' ? 'text-sky-700 font-bold text-xs'
+              : 'text-slate-600 font-bold text-[11px]';
+            coloHtml += `<div class="text-center h-4 leading-none ${symColor}">${sym}</div>`;
+          }
+          coloHtml += `</div>`;
+
+          mCell.innerHTML = `<div class="min-h-[14px] flex items-center flex-wrap">${badges}</div>${coloHtml}`;
+          metaGrid.appendChild(mCell);
+        }
+        topMetaRow.appendChild(metaGrid);
+        sysWrapper.appendChild(topMetaRow);
+
+        // Render Setiap Baris Instrumen / Ricikan
+        visibleTracks.forEach(trk => {
+          const realTrackIdx = state.tracks.findIndex(t => t.id === trk.id);
+          const trackRow = document.createElement('div');
+          trackRow.className = 'flex items-stretch border-b border-slate-200/80 pb-1.5';
+
+          const labelCol = document.createElement('div');
+          labelCol.className = 'w-24 sm:w-32 shrink-0 pr-2 flex flex-col justify-center';
+          labelCol.innerHTML = `
+            <div class="font-extrabold text-[11px] sm:text-xs text-slate-900 truncate">${trk.name}</div>
+            <div class="text-[9px] text-slate-500 uppercase font-semibold">${trk.muted ? 'MUTE' : (trk.solo ? 'SOLO' : trk.role)}</div>
+          `;
+          trackRow.appendChild(labelCol);
+
+          const measuresGrid = document.createElement('div');
+          measuresGrid.className = 'flex-1 grid gap-1';
+          measuresGrid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+          for (let m = startM; m < endM; m++) {
+            const mark = state.measureMarks[m] || {};
+            const mBox = document.createElement('div');
+            const leftBorder = mark.repeatStart ? 'border-l-4 border-double border-slate-900' : 'border-l border-slate-400';
+            const rightBorder = (m === endM - 1 || mark.repeatEnd) ? 'border-r-2 border-slate-900' : '';
+            mBox.className = `${leftBorder} ${rightBorder} px-1 py-0.5 grid gap-0.5 items-center`;
+            mBox.style.gridTemplateColumns = `repeat(${state.beatsPerMeasure}, minmax(0, 1fr))`;
+
+            for (let b = 0; b < state.beatsPerMeasure; b++) {
+              const gb = m * state.beatsPerMeasure + b;
+              const cell = trk.cells[gb] || createEmptyCell(1);
+              const isSelected = state.selection.trackIdx === realTrackIdx && state.selection.measureIdx === m && state.selection.beatIdx === b;
+
+              const beatBtn = document.createElement('div');
+              beatBtn.dataset.globalBeat = gb;
+              beatBtn.onclick = () => selectCell(realTrackIdx, m, b, 0);
+              beatBtn.className = `score-beat-cell cursor-pointer rounded px-0.5 py-0.5 flex flex-col items-center justify-center min-h-[38px] transition ${
+                isSelected ? 'ring-2 ring-amber-500 bg-amber-100/90' : 'hover:bg-slate-100'
+              }`;
+
+              // Subdivisi nada (1, 2, 3 triol, atau 4)
+              const beamClass = cell.subdivision === 2 ? 'beam-1' : (cell.subdivision === 4 ? 'beam-2' : (cell.subdivision === 3 ? 'beam-1' : ''));
+              let v1Html = `<div class="flex items-center justify-center gap-0.5 score-font font-bold text-xs sm:text-sm text-slate-950 ${beamClass}">`;
+              if (cell.subdivision === 3) {
+                v1Html += `<span class="text-[8px] font-extrabold text-amber-700 mr-0.5">3</span>`;
+              }
+              for (let sub = 0; sub < cell.subdivision; sub++) {
+                const subActive = isSelected && state.selection.subIdx === sub && cell.subdivision > 1;
+                v1Html += `<span class="${subActive ? 'underline decoration-amber-600 decoration-2' : ''}">${formatSingleNoteGlyph(cell.notes[sub])}</span>`;
+              }
+              v1Html += `</div>`;
+
+              // Suara 2 (Lapisan Bawah - Gembyang / Kempyung) jika terisi
+              const hasV2 = cell.notesV2 && cell.notesV2.some(n => n && n.val !== '.' && n.val !== '');
+              let v2Html = '';
+              if (hasV2) {
+                v2Html = `<div class="flex items-center justify-center gap-0.5 score-font font-bold text-[11px] text-sky-900 border-t border-slate-300/70 mt-0.5 pt-0.5">`;
+                for (let sub = 0; sub < cell.subdivision; sub++) {
+                  v2Html += `<span>${formatSingleNoteGlyph(cell.notesV2[sub])}</span>`;
+                }
+                v2Html += `</div>`;
+              }
+
+              // Lirik / Cakepan aktif
+              const vNum = state.activeLyricVerse || 1;
+              const lyricText = (cell.lyrics && cell.lyrics[vNum]) ? cell.lyrics[vNum] : '';
+              const lyricHtml = lyricText
+                ? `<div class="text-[9px] font-sans font-semibold text-slate-700 leading-tight mt-0.5 truncate max-w-full">${lyricText}</div>`
+                : '';
+
+              beatBtn.innerHTML = v1Html + v2Html + lyricHtml;
+              mBox.appendChild(beatBtn);
+            }
+
+            measuresGrid.appendChild(mBox);
+          }
+
+          trackRow.appendChild(measuresGrid);
+          sysWrapper.appendChild(trackRow);
+        });
+
+        container.appendChild(sysWrapper);
+      }
+    }
+
+    // ==================== RENDER KEYPAD & WILAH VIRTUAL ====================
+    function renderKeypad() {
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const track = state.tracks[trackIdx];
+      if (!track) return;
+
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const cell = track.cells[gb] || createEmptyCell(1);
+
+      const info = document.getElementById('activeCellInfo');
+      if (info) info.textContent = `${track.name} • Gatra ${measureIdx + 1} • Ketuk ${beatIdx + 1}`;
+
+      const statusCursor = document.getElementById('statusCursorInfo');
+      if (statusCursor) statusCursor.textContent = `Instrumen: ${track.name} • Gatra ${measureIdx + 1} • Ketuk ${beatIdx + 1} • Suara ${state.activeVoice}`;
+
+      // Highlight tombol subdivisi
+      document.querySelectorAll('.subdiv-btn').forEach(btn => {
+        const active = parseInt(btn.dataset.subdiv, 10) === cell.subdivision;
+        btn.className = active
+          ? 'subdiv-btn py-1.5 rounded-lg bg-amber-500 text-slate-950 transition'
+          : 'subdiv-btn py-1.5 rounded-lg sb-input border transition';
+      });
+
+      // Pemilih sub-ketuk jika > 1
+      const subRow = document.getElementById('subBeatSelectorRow');
+      const subBtns = document.getElementById('subBeatButtons');
+      if (subRow && subBtns) {
+        if (cell.subdivision > 1) {
+          subRow.classList.remove('hidden');
+          subBtns.innerHTML = Array.from({ length: cell.subdivision }, (_, idx) => `
+            <button onclick="selectSubBeat(${idx})" class="w-5 h-5 rounded font-bold ${subIdx === idx ? 'bg-amber-500 text-slate-950' : 'sb-input border'}">${idx + 1}</button>
+          `).join('');
+        } else {
+          subRow.classList.add('hidden');
+        }
+      }
+
+      // Render Grid Tombol Nada sesuai instrumen/laras
+      const notesContainer = document.getElementById('keypadNotesContainer');
+      if (notesContainer) {
+        if (track.role === 'kendhang') {
+          const kBtns = [
+            { val: 'P', label: 'P (Thung)' },
+            { val: 'b', label: 'b (Dhang)' },
+            { val: 'd', label: 'd (Dlung)' },
+            { val: 'p', label: 'p (Thong)' },
+            { val: 't', label: 't (Tak)' },
+            { val: 'k', label: 'k (Ket)' },
+            { val: 'o', label: 'o (Tong)' },
+            { val: '.', label: '. (Pin)' }
+          ];
+          notesContainer.innerHTML = `
+            <div class="grid grid-cols-4 gap-1 text-xs font-extrabold score-font">
+              ${kBtns.map(k => `<button onclick="enterNoteValue('${k.val}')" class="py-2 rounded-lg sb-input border hover:border-amber-500 transition">${k.label}</button>`).join('')}
+            </div>
+          `;
+        } else if (state.systemMode === 'western') {
+          notesContainer.innerHTML = `
+            <div class="grid grid-cols-4 gap-1 text-sm font-extrabold score-font">
+              ${['1','2','3','4','5','6','7','.'].map(n => `<button onclick="enterNoteValue('${n}')" class="py-2 rounded-lg sb-input border hover:border-sky-400 transition">${n}</button>`).join('')}
+            </div>
+            <div class="grid grid-cols-3 gap-1 text-[11px] font-bold">
+              <button onclick="toggleWesternAccidental('/')" class="py-1.5 rounded-lg sb-input border hover:border-sky-400">/ Naik ½ (♯)</button>
+              <button onclick="toggleWesternAccidental('\\')" class="py-1.5 rounded-lg sb-input border hover:border-sky-400">\ Turun ½ (♭)</button>
+              <button onclick="enterNoteValue('0')" class="py-1.5 rounded-lg sb-input border hover:border-rose-400 text-rose-400">0 (Diam)</button>
+            </div>
+          `;
+        } else if (state.laras === 'pelog') {
+          notesContainer.innerHTML = `
+            <div class="grid grid-cols-4 gap-1 text-sm font-extrabold score-font">
+              ${['1','2','3','4','5','6','7','.'].map(n => `<button onclick="enterNoteValue('${n}')" class="py-2 rounded-lg sb-input border hover:border-orange-400 transition">${n}</button>`).join('')}
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[11px] font-bold">
+              <button onclick="enterNoteValue('0')" class="py-1.5 rounded-lg sb-input border hover:border-rose-400 text-rose-400">0 (Diam / Redam)</button>
+              <button onclick="advanceCursor(1)" class="py-1.5 rounded-lg sb-input border hover:border-amber-400">Lewati Ketuk →</button>
+            </div>
+          `;
+        } else if (state.laras === 'gabungan') {
+          notesContainer.innerHTML = `
+            <div class="grid grid-cols-4 gap-1 text-sm font-extrabold score-font">
+              ${['1','2','3','5','6'].map(n => `<button onclick="enterNoteValue('${n}')" class="py-2 rounded-lg sb-input border hover:border-amber-400 text-amber-300 transition">${n}</button>`).join('')}
+              ${['4','7'].map(n => `<button onclick="enterNoteValue('${n}')" class="py-2 rounded-lg sb-input border hover:border-orange-400 text-orange-400 transition" title="Nada Pelog">${n} (Pl)</button>`).join('')}
+              <button onclick="enterNoteValue('.')" class="py-2 rounded-lg sb-input border hover:border-amber-400 transition">.</button>
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[11px] font-bold">
+              <button onclick="enterNoteValue('0')" class="py-1.5 rounded-lg sb-input border hover:border-rose-400 text-rose-400">0 (Diam)</button>
+              <button onclick="advanceCursor(1)" class="py-1.5 rounded-lg sb-input border hover:border-amber-400">Lewati Ketuk →</button>
+            </div>
+          `;
+        } else {
+          // Slendro standar
+          notesContainer.innerHTML = `
+            <div class="grid grid-cols-4 gap-1 text-sm font-extrabold score-font">
+              ${['1','2','3','5','6','.','0'].map(n => `<button onclick="enterNoteValue('${n}')" class="py-2 rounded-lg sb-input border hover:border-amber-400 transition">${n}</button>`).join('')}
+              <button onclick="advanceCursor(1)" class="py-2 rounded-lg sb-input border hover:border-emerald-400 text-xs">→</button>
+            </div>
+          `;
+        }
+      }
+
+      // Sinkronkan lirik ketukan aktif
+      const lyricInput = document.getElementById('inputBeatLyric');
+      const verseLabel = document.getElementById('lyricVerseLabel');
+      const vNum = state.activeLyricVerse || 1;
+      if (verseLabel) verseLabel.textContent = `Ayat ${vNum}:`;
+      if (lyricInput && document.activeElement !== lyricInput) {
+        lyricInput.value = (cell.lyrics && cell.lyrics[vNum]) ? cell.lyrics[vNum] : '';
+      }
+
+      if (!document.getElementById('virtualWilahBar').classList.contains('hidden')) {
+        renderVirtualWilahBar();
+      }
+    }
+
+    // ==================== VIRTUAL WILAH PERUNGGU INTERAKTIF ====================
+    let wilahStepInputEnabled = true;
+
+    function toggleVirtualWilahBar(forceState = null) {
+      const bar = document.getElementById('virtualWilahBar');
+      if (!bar) return;
+      const show = forceState !== null ? forceState : bar.classList.contains('hidden');
+      bar.classList.toggle('hidden', !show);
+      if (show) renderVirtualWilahBar();
+    }
+
+    function toggleWilahStepInput() {
+      wilahStepInputEnabled = !wilahStepInputEnabled;
+      const btn = document.getElementById('btnWilahStepMode');
+      if (btn) {
+        btn.textContent = wilahStepInputEnabled ? 'Mode: Rekam Step-Time' : 'Mode: Audisi Saja';
+        btn.className = wilahStepInputEnabled
+          ? 'px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[9px] transition'
+          : 'px-2 py-0.5 rounded bg-slate-700 text-amber-200 font-bold text-[9px] transition';
+      }
+    }
+
+    function renderVirtualWilahBar() {
+      const container = document.getElementById('virtualWilahKeys');
+      const titleEl = document.getElementById('wilahBarTitle');
+      if (!container) return;
+
+      let keys = [];
+      if (state.systemMode === 'western') {
+        if (titleEl) titleEl.textContent = `Tuts Audisi Diatonis (${state.westernKey})`;
+        keys = [
+          { val: '1', oct: -1, label: '1̣', sub: 'Do3', cls: 'wilah-key-piano' },
+          { val: '2', oct: -1, label: '2̣', sub: 'Re3', cls: 'wilah-key-piano' },
+          { val: '3', oct: -1, label: '3̣', sub: 'Mi3', cls: 'wilah-key-piano' },
+          { val: '4', oct: -1, label: '4̣', sub: 'Fa3', cls: 'wilah-key-piano' },
+          { val: '5', oct: -1, label: '5̣', sub: 'Sol3', cls: 'wilah-key-piano' },
+          { val: '6', oct: -1, label: '6̣', sub: 'La3', cls: 'wilah-key-piano' },
+          { val: '7', oct: -1, label: '7̣', sub: 'Si3', cls: 'wilah-key-piano' },
+          { val: '1', oct: 0, label: '1', sub: 'Do4', cls: 'wilah-key-piano' },
+          { val: '2', oct: 0, label: '2', sub: 'Re4', cls: 'wilah-key-piano' },
+          { val: '3', oct: 0, label: '3', sub: 'Mi4', cls: 'wilah-key-piano' },
+          { val: '4', oct: 0, label: '4', sub: 'Fa4', cls: 'wilah-key-piano' },
+          { val: '5', oct: 0, label: '5', sub: 'Sol4', cls: 'wilah-key-piano' }
+        ];
+      } else if (state.laras === 'pelog') {
+        if (titleEl) titleEl.textContent = `Rancakan Wilah Pelog (${state.gaya.toUpperCase()})`;
+        keys = [
+          { val: '6', oct: -1, label: '6̣', sub: 'Nem', cls: 'wilah-key-pelog' },
+          { val: '7', oct: -1, label: '7̣', sub: 'Pi', cls: 'wilah-key-pelog' },
+          { val: '1', oct: 0, label: '1', sub: 'Ji', cls: 'wilah-key-pelog' },
+          { val: '2', oct: 0, label: '2', sub: 'Ro', cls: 'wilah-key-pelog' },
+          { val: '3', oct: 0, label: '3', sub: 'Lu', cls: 'wilah-key-pelog' },
+          { val: '4', oct: 0, label: '4', sub: 'Pat', cls: 'wilah-key-pelog' },
+          { val: '5', oct: 0, label: '5', sub: 'Ma', cls: 'wilah-key-pelog' },
+          { val: '6', oct: 0, label: '6', sub: 'Nem', cls: 'wilah-key-pelog' },
+          { val: '7', oct: 0, label: '7', sub: 'Pi', cls: 'wilah-key-pelog' },
+          { val: '1', oct: 1, label: '1̇', sub: 'Ji+', cls: 'wilah-key-pelog' },
+          { val: '2', oct: 1, label: '2̇', sub: 'Ro+', cls: 'wilah-key-pelog' },
+          { val: '3', oct: 1, label: '3̇', sub: 'Lu+', cls: 'wilah-key-pelog' }
+        ];
+      } else {
+        const title = state.laras === 'gabungan' ? 'Gabungan Slendro & Pelog' : 'Laras Slendro';
+        if (titleEl) titleEl.textContent = `Rancakan Wilah ${title} (${state.gaya.toUpperCase()})`;
+        keys = [
+          { val: '5', oct: -1, label: '5̣', sub: 'Ma', cls: 'wilah-key-bronze' },
+          { val: '6', oct: -1, label: '6̣', sub: 'Nem', cls: 'wilah-key-bronze' },
+          { val: '1', oct: 0, label: '1', sub: 'Ji', cls: 'wilah-key-bronze' },
+          { val: '2', oct: 0, label: '2', sub: 'Ro', cls: 'wilah-key-bronze' },
+          { val: '3', oct: 0, label: '3', sub: 'Lu', cls: 'wilah-key-bronze' },
+          ...(state.laras === 'gabungan' ? [{ val: '4', oct: 0, label: '4', sub: 'Pelog', cls: 'wilah-key-pelog' }] : []),
+          { val: '5', oct: 0, label: '5', sub: 'Ma', cls: 'wilah-key-bronze' },
+          { val: '6', oct: 0, label: '6', sub: 'Nem', cls: 'wilah-key-bronze' },
+          ...(state.laras === 'gabungan' ? [{ val: '7', oct: 0, label: '7', sub: 'Pelog', cls: 'wilah-key-pelog' }] : []),
+          { val: '1', oct: 1, label: '1̇', sub: 'Ji+', cls: 'wilah-key-bronze' },
+          { val: '2', oct: 1, label: '2̇', sub: 'Ro+', cls: 'wilah-key-bronze' },
+          { val: '3', oct: 1, label: '3̇', sub: 'Lu+', cls: 'wilah-key-bronze' }
+        ];
+      }
+
+      container.innerHTML = keys.map(k => `
+        <button type="button" onclick="handleVirtualWilahPress('${k.val}', ${k.oct})"
+          class="${k.cls} rounded-lg py-2 px-1 flex flex-col items-center justify-center">
+          <span class="score-font font-extrabold text-sm leading-none">${k.label}</span>
+          <span class="text-[8px] font-bold opacity-75 mt-0.5">${k.sub}</span>
+        </button>
+      `).join('');
+    }
+
+    function handleVirtualWilahPress(val, oct) {
+      const trk = state.tracks[state.selection.trackIdx] || state.tracks[0];
+      triggerInstrumentSound(trk, { val, octave: oct, accidental: '', articulation: '' }, 0.8);
+      if (!wilahStepInputEnabled || state.reviewMode) return;
+
+      pushUndoSnapshot();
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const cell = state.tracks[trackIdx].cells[gb];
+      const noteObj = getActiveNoteObj(cell, subIdx);
+      noteObj.val = val;
+      noteObj.octave = oct;
+      advanceCursor(1);
+      renderScore();
+      renderKeypad();
+    }
+
+    // ==================== EDITING & NOTATION ACTIONS ====================
+    function selectCell(trackIdx, measureIdx, beatIdx, subIdx = 0) {
+      state.selection = { trackIdx, measureIdx, beatIdx, subIdx };
+      renderScore();
+      renderKeypad();
+      renderMixerAndNavigator();
+    }
+
+    function selectSubBeat(subIdx) {
+      state.selection.subIdx = subIdx;
+      renderScore();
+      renderKeypad();
+    }
+
+    function advanceCursor(steps = 1) {
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const track = state.tracks[trackIdx];
+      if (!track) return;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const cell = track.cells[gb];
+
+      if (steps > 0 && cell && subIdx + 1 < cell.subdivision) {
+        state.selection.subIdx = subIdx + 1;
+        return;
+      }
+      const totalBeats = state.measureCount * state.beatsPerMeasure;
+      const nextGb = (gb + steps + totalBeats) % totalBeats;
+      state.selection.measureIdx = Math.floor(nextGb / state.beatsPerMeasure);
+      state.selection.beatIdx = nextGb % state.beatsPerMeasure;
+      state.selection.subIdx = 0;
+    }
+
+    function enterNoteValue(val) {
+      if (state.reviewMode) {
+        showToast('Review Mode aktif — nonaktifkan untuk mengedit notasi');
+        return;
+      }
+      pushUndoSnapshot();
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const track = state.tracks[trackIdx];
+      if (!track) return;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const cell = track.cells[gb];
+      const noteObj = getActiveNoteObj(cell, subIdx);
+      noteObj.val = val;
+      if (val === '.' || val === '0') {
+        noteObj.octave = 0;
+        noteObj.accidental = '';
+      }
+
+      // Audition suara saat diketik (seperti Sibelius)
+      if (val !== '.' && val !== '0') {
+        triggerInstrumentSound(track, noteObj, 0.65);
+      }
+
+      advanceCursor(1);
+      renderScore();
+      renderKeypad();
+    }
+
+    function shiftNoteOctave(delta) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const cell = state.tracks[trackIdx].cells[gb];
+      const noteObj = getActiveNoteObj(cell, subIdx);
+      if (noteObj.val === '.' || noteObj.val === '0') return;
+      noteObj.octave = Math.max(-2, Math.min(2, (noteObj.octave || 0) + delta));
+      triggerInstrumentSound(state.tracks[trackIdx], noteObj, 0.65);
+      renderScore();
+      renderKeypad();
+    }
+
+    function toggleWesternAccidental(acc) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const cell = state.tracks[trackIdx].cells[gb];
+      const noteObj = getActiveNoteObj(cell, subIdx);
+      noteObj.accidental = noteObj.accidental === acc ? '' : acc;
+      triggerInstrumentSound(state.tracks[trackIdx], noteObj, 0.65);
+      renderScore();
+    }
+
+    function setCellSubdivision(subdiv) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const { trackIdx, measureIdx, beatIdx } = state.selection;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const oldCell = state.tracks[trackIdx].cells[gb];
+      const newCell = createEmptyCell(subdiv);
+      for (let i = 0; i < Math.min(subdiv, oldCell.subdivision); i++) {
+        newCell.notes[i] = { ...oldCell.notes[i] };
+        newCell.notesV2[i] = { ...oldCell.notesV2[i] };
+      }
+      newCell.lyrics = { ...oldCell.lyrics };
+      state.tracks[trackIdx].cells[gb] = newCell;
+      state.selection.subIdx = 0;
+      renderScore();
+      renderKeypad();
+    }
+
+    function toggleActiveVoice() {
+      state.activeVoice = state.activeVoice === 1 ? 2 : 1;
+      const btn = document.getElementById('btnVoiceToggle');
+      if (btn) {
+        btn.textContent = state.activeVoice === 1 ? 'Suara 1 (Atas)' : 'Suara 2 (Bawah)';
+        btn.className = state.activeVoice === 1
+          ? 'px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-bold text-[10px] transition'
+          : 'px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px] transition';
+      }
+      renderKeypad();
+    }
+
+    function applyVerticalInterval(type) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const cell = state.tracks[trackIdx].cells[gb];
+      const idx = Math.min(subIdx, cell.subdivision - 1);
+      const topNote = cell.notes[idx];
+      if (!topNote || topNote.val === '.' || topNote.val === '0') {
+        showToast('Isi nada atas terlebih dahulu sebelum menambah Gembyang/Kempyung');
+        return;
+      }
+      if (!cell.notesV2) cell.notesV2 = Array.from({ length: cell.subdivision }, createEmptyNote);
+
+      if (type === 'gembyang') {
+        cell.notesV2[idx] = { val: topNote.val, octave: (topNote.octave || 0) - 1, accidental: topNote.accidental, articulation: '' };
+        showToast('Gembyang oktaf bawah ditambahkan');
+      } else {
+        // Kempyung selang 2 bilah karawitan
+        const kempyungMap = { '1': '3', '2': '5', '3': '6', '5': '1', '6': '2', '4': '6', '7': '2' };
+        const lowVal = kempyungMap[topNote.val] || topNote.val;
+        cell.notesV2[idx] = { val: lowVal, octave: -1, accidental: '', articulation: '' };
+        showToast('Kempyung ditambahkan');
+      }
+      renderScore();
+    }
+
+    function setColotomicAtSelection(symbol) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const gb = state.selection.measureIdx * state.beatsPerMeasure + state.selection.beatIdx;
+      if (!symbol) delete state.colotomic[gb];
+      else state.colotomic[gb] = symbol;
+      renderScore();
+    }
+
+    function toggleArticulation(art) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const noteObj = getActiveNoteObj(state.tracks[trackIdx].cells[gb], subIdx);
+      noteObj.articulation = noteObj.articulation === art ? '' : art;
+      renderScore();
+    }
+
+    function updateCurrentCellLyric(text) {
+      if (state.reviewMode) return;
+      const { trackIdx, measureIdx, beatIdx } = state.selection;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const cell = state.tracks[trackIdx].cells[gb];
+      if (!cell.lyrics) cell.lyrics = { 1: '', 2: '', 3: '', 4: '', 5: '' };
+      cell.lyrics[state.activeLyricVerse || 1] = text;
+      renderScore();
+    }
+
+    function setActiveLyricVerse(v) {
+      state.activeLyricVerse = v;
+      renderRibbonContent();
+      renderScore();
+      renderKeypad();
+    }
+
+    // ==================== AUTO-GARAP KARAWITAN ====================
+    function autoGarapFromBalungan(mode) {
+      if (state.reviewMode) {
+        showToast('Nonaktifkan Review Mode terlebih dahulu');
+        return;
+      }
+      pushUndoSnapshot();
+      const balunganTrack = state.tracks.find(t => ['demung', 'saron', 'slenthem'].includes(t.role)) || state.tracks[0];
+      const totalBeats = state.measureCount * state.beatsPerMeasure;
+
+      if (mode === 'kolotomik') {
+        state.colotomic = {};
+        for (let gb = 0; gb < totalBeats; gb++) {
+          const b = gb % 4;
+          const g = Math.floor(gb / 4);
+          if (state.gendingForm === 'ketawang') {
+            if (b === 0 || b === 2) state.colotomic[gb] = '-';
+            if (b === 1) state.colotomic[gb] = '+';
+            if (g % 2 === 1 && b === 3) state.colotomic[gb] = '◡';
+            if (g % 4 === 3 && b === 3) state.colotomic[gb] = '◯';
+          } else if (state.gendingForm === 'ladrang') {
+            if (b === 0 || b === 2) state.colotomic[gb] = '-';
+            if (b === 1) state.colotomic[gb] = '+';
+            if (g % 2 === 1 && b === 3) state.colotomic[gb] = '◡';
+            if ((g % 8 === 3 || g % 8 === 5 || g % 8 === 7) && b === 1) state.colotomic[gb] = '◠';
+            if (g % 8 === 7 && b === 3) state.colotomic[gb] = '◯';
+          } else {
+            if (b === 0 || b === 2) state.colotomic[gb] = '+';
+            if (b === 1) state.colotomic[gb] = '◠';
+            if (b === 3) state.colotomic[gb] = (g % 4 === 3) ? '◯' : '◡';
+          }
+        }
+        showToast('Penanda Gong, Kenong, Kempul, & Kethuk diisi otomatis');
+      } else if (mode === 'peking' && balunganTrack) {
+        let peking = state.tracks.find(t => t.role === 'peking');
+        if (!peking) {
+          peking = createTrack('Peking', 'peking', 'bronze_high', 0.45, 0.72);
+          state.tracks.push(peking);
+        }
+        for (let gb = 0; gb < totalBeats; gb++) {
+          const src = balunganTrack.cells[gb].notes[0];
+          const c = createEmptyCell(2);
+          c.notes[0] = { ...src };
+          c.notes[1] = { ...src };
+          peking.cells[gb] = c;
+        }
+        showToast('Garap Peking (Nacah 2×) berhasil disusun');
+      } else if (mode === 'slenthem' && balunganTrack) {
+        let slenthem = state.tracks.find(t => t.role === 'slenthem');
+        if (!slenthem) {
+          slenthem = createTrack('Slenthem', 'slenthem', 'bronze_sub', -0.35, 0.9);
+          state.tracks.unshift(slenthem);
+        }
+        for (let gb = 0; gb < totalBeats; gb++) {
+          const src = balunganTrack.cells[gb].notes[0];
+          const c = createEmptyCell(1);
+          c.notes[0] = { val: src.val, octave: src.val === '.' ? 0 : -1, accidental: '', articulation: '' };
+          slenthem.cells[gb] = c;
+        }
+        showToast('Garap Slenthem (Oktaf Rendah) berhasil disusun');
+      } else if (mode === 'bonang' && balunganTrack) {
+        let bonang = state.tracks.find(t => t.role === 'bonang');
+        if (!bonang) {
+          bonang = createTrack('Bonang Barung', 'bonang', 'bonang', -0.5, 0.8);
+          state.tracks.push(bonang);
+        }
+        for (let gb = 0; gb < totalBeats; gb++) {
+          const src = balunganTrack.cells[gb].notes[0];
+          const c = createEmptyCell(1);
+          c.notes[0] = { val: src.val, octave: src.val === '.' ? 0 : 1, accidental: '', articulation: '' };
+          c.notesV2[0] = { val: src.val, octave: 0, accidental: '', articulation: '' };
+          bonang.cells[gb] = c;
+        }
+        showToast('Garap Bonang Barung (Gembyang) berhasil disusun');
+      }
+
+      closeModal('modalAutoGarap');
+      renderAll();
+    }
+
+    // ==================== GATRA, REHEARSAL MARKS, CLIPBOARD, SUGGESTIONS ====================
+    let copiedMeasureBuffer = null;
+
+    function copyCurrentMeasure() {
+      const m = state.selection.measureIdx;
+      const start = m * state.beatsPerMeasure;
+      copiedMeasureBuffer = state.tracks.map(t =>
+        JSON.parse(JSON.stringify(t.cells.slice(start, start + state.beatsPerMeasure)))
+      );
+      showToast(`Gatra ${m + 1} disalin`);
+    }
+
+    function pasteCurrentMeasure() {
+      if (!copiedMeasureBuffer || state.reviewMode) return;
+      pushUndoSnapshot();
+      const m = state.selection.measureIdx;
+      const start = m * state.beatsPerMeasure;
+      state.tracks.forEach((t, tIdx) => {
+        if (copiedMeasureBuffer[tIdx]) {
+          for (let b = 0; b < state.beatsPerMeasure; b++) {
+            t.cells[start + b] = JSON.parse(JSON.stringify(copiedMeasureBuffer[tIdx][b]));
+          }
+        }
+      });
+      renderScore();
+      showToast(`Ditempel ke Gatra ${m + 1}`);
+    }
+
+    function clearCurrentMeasure() {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const m = state.selection.measureIdx;
+      const start = m * state.beatsPerMeasure;
+      state.tracks.forEach(t => {
+        for (let b = 0; b < state.beatsPerMeasure; b++) {
+          t.cells[start + b] = createEmptyCell(1);
+        }
+      });
+      renderScore();
+      showToast(`Gatra ${m + 1} dikosongkan`);
+    }
+
+    function addMeasure(count = 1) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      state.measureCount += count;
+      const addedBeats = count * state.beatsPerMeasure;
+      state.tracks.forEach(t => {
+        for (let i = 0; i < addedBeats; i++) t.cells.push(createEmptyCell(1));
+      });
+      renderAll();
+      showToast(`Menambahkan ${count} gatra baru`);
+    }
+
+    function removeLastMeasure() {
+      if (state.reviewMode || state.measureCount <= 1) return;
+      pushUndoSnapshot();
+      state.measureCount -= 1;
+      const targetBeats = state.measureCount * state.beatsPerMeasure;
+      state.tracks.forEach(t => {
+        t.cells = t.cells.slice(0, targetBeats);
+      });
+      if (state.selection.measureIdx >= state.measureCount) {
+        state.selection.measureIdx = state.measureCount - 1;
+      }
+      renderAll();
+      showToast('1 gatra terakhir dihapus');
+    }
+
+    function transposeTrackOrCell(step) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const scale = state.systemMode === 'western'
+        ? ['1','2','3','4','5','6','7']
+        : (state.laras === 'pelog' ? ['1','2','3','4','5','6','7'] : ['1','2','3','5','6']);
+      const { trackIdx, measureIdx, beatIdx, subIdx } = state.selection;
+      const gb = measureIdx * state.beatsPerMeasure + beatIdx;
+      const noteObj = getActiveNoteObj(state.tracks[trackIdx].cells[gb], subIdx);
+      const idx = scale.indexOf(noteObj.val);
+      if (idx === -1) return;
+      const nextIdx = (idx + step + scale.length) % scale.length;
+      noteObj.val = scale[nextIdx];
+      triggerInstrumentSound(state.tracks[trackIdx], noteObj, 0.65);
+      renderScore();
+    }
+
+    function cycleRehearsalMark() {
+      const m = state.selection.measureIdx;
+      if (!state.measureMarks[m]) state.measureMarks[m] = {};
+      const letters = ['', 'A', 'B', 'C', 'D', 'E', 'F'];
+      const cur = state.measureMarks[m].rehearsal || '';
+      const next = letters[(letters.indexOf(cur) + 1) % letters.length];
+      state.measureMarks[m].rehearsal = next;
+      renderScore();
+      renderMixerAndNavigator();
+    }
+
+    function setMeasureSection(sec) {
+      const m = state.selection.measureIdx;
+      if (!state.measureMarks[m]) state.measureMarks[m] = {};
+      state.measureMarks[m].section = state.measureMarks[m].section === sec ? '' : sec;
+      renderScore();
+      renderMixerAndNavigator();
+    }
+
+    function setMeasureExpression(expr) {
+      const m = state.selection.measureIdx;
+      if (!state.measureMarks[m]) state.measureMarks[m] = {};
+      state.measureMarks[m].expression = expr;
+      renderScore();
+    }
+
+    function toggleMeasureRepeat(side) {
+      const m = state.selection.measureIdx;
+      if (!state.measureMarks[m]) state.measureMarks[m] = {};
+      if (side === 'start') state.measureMarks[m].repeatStart = !state.measureMarks[m].repeatStart;
+      else state.measureMarks[m].repeatEnd = !state.measureMarks[m].repeatEnd;
+      renderScore();
+    }
+
+    function jumpToMeasure(m) {
+      state.selection.measureIdx = m;
+      state.selection.beatIdx = 0;
+      state.selection.subIdx = 0;
+      renderScore();
+      renderKeypad();
+      renderMixerAndNavigator();
+    }
+
+    function generateSmartSuggestions() {
+      const box = document.getElementById('smartSuggestionsList');
+      if (!box) return;
+      const m = state.selection.measureIdx;
+      const selehBeat = (m + 1) * state.beatsPerMeasure - 1;
+      const trk = state.tracks[state.selection.trackIdx] || state.tracks[0];
+      const selehVal = trk?.cells[selehBeat]?.notes[0]?.val || '6';
+
+      const suggestions = state.systemMode === 'gamelan'
+        ? [
+            { title: `Cengkok Seleh ${selehVal} (Mlampah)`, seq: ['2','3','5', selehVal === '.' ? '6' : selehVal] },
+            { title: `Balungan Nibani Seleh ${selehVal}`, seq: ['.','5','.', selehVal === '.' ? '2' : selehVal] },
+            { title: `Gantungan Nada ${selehVal === '.' ? '6' : selehVal}`, seq: [selehVal === '.' ? '6' : selehVal, '.', '.', '.'] }
+          ]
+        : [
+            { title: 'Kadens Autentik (V – I)', seq: ['5','7','2','1'] },
+            { title: 'Progresi Subdominan (IV – V)', seq: ['4','6','5','2'] },
+            { title: 'Arpeggio Tonika (1–3–5–3)', seq: ['1','3','5','3'] }
+          ];
+
+      box.innerHTML = suggestions.map((s, idx) => `
+        <button onclick='applySmartSuggestion(${JSON.stringify(s.seq)})' class="w-full p-2 rounded-lg sb-input border hover:border-purple-400 text-left transition">
+          <div class="font-bold text-[11px] text-purple-300">${s.title}</div>
+          <div class="score-font text-xs font-extrabold mt-0.5">${s.seq.join('  ')}</div>
+        </button>
+      `).join('');
+    }
+
+    function applySmartSuggestion(seq) {
+      if (state.reviewMode) return;
+      pushUndoSnapshot();
+      const { trackIdx, measureIdx } = state.selection;
+      const start = measureIdx * state.beatsPerMeasure;
+      seq.forEach((val, b) => {
+        if (b < state.beatsPerMeasure) {
+          state.tracks[trackIdx].cells[start + b] = createEmptyCell(1);
+          state.tracks[trackIdx].cells[start + b].notes[0].val = val;
+        }
+      });
+      renderScore();
+      showToast('Pola saran diterapkan ke gatra aktif');
+    }
+
+    // ==================== WEB AUDIO SYNTHESIZER & CUSTOM SAMPLES ====================
+    function ensureAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function getPitchFrequency(noteObj, role) {
+      const val = String(noteObj.val || '1');
+      const n = parseInt(val, 10) || 1;
+      const oct = noteObj.octave || 0;
+
+      // Embat Jawa: Surakarta, Yogyakarta, Jawa Timuran
+      const gayaFactor = state.gaya === 'yogyakarta' ? 1.012 : (state.gaya === 'jawatimuran' ? 0.992 : 1.0);
+      const slendro = { 1: 264, 2: 303, 3: 348, 5: 400, 6: 460 };
+      const pelog = { 1: 278, 2: 298, 3: 326, 4: 382, 5: 414, 6: 442, 7: 492 };
+      const western = { 1: 261.63, 2: 293.66, 3: 329.63, 4: 349.23, 5: 392.00, 6: 440.00, 7: 493.88 };
+
+      let base = 264;
+      if (state.systemMode === 'western') {
+        base = western[n] || 261.63;
+        if (noteObj.accidental === '/') base *= Math.pow(2, 1 / 12);
+        if (noteObj.accidental === '\\') base /= Math.pow(2, 1 / 12);
+      } else if (state.laras === 'pelog' || (state.laras === 'gabungan' && (n === 4 || n === 7))) {
+        base = (pelog[n] || 278) * gayaFactor;
+      } else {
+        base = (slendro[n] || 264) * gayaFactor;
+      }
+
+      // Register berdasarkan jenis ricikan
+      let roleOctave = 0;
+      if (role === 'slenthem' || role === 'bass') roleOctave = -1;
+      if (role === 'peking' || role === 'bonang_p' || role === 'suling') roleOctave = 1;
+
+      return base * Math.pow(2, oct + roleOctave);
+    }
+
+    function triggerInstrumentSound(track, noteObj, durationSec = 0.6, targetCtx = null, startTime = null) {
+      if (!track || !noteObj || noteObj.val === '.' || noteObj.val === '0' || noteObj.val === '') return;
+      const ctx = targetCtx || audioCtx;
+      if (!ctx) {
+        ensureAudioCtx();
+        return triggerInstrumentSound(track, noteObj, durationSec, audioCtx, startTime);
+      }
+
+      const now = startTime !== null ? startTime : ctx.currentTime;
+      const vol = (track.volume ?? 0.85) * (noteObj.articulation === 'accent' ? 1.25 : 1.0);
+      const decay = noteObj.articulation === 'piles' ? 0.14 : Math.max(0.35, durationSec * 1.6);
+
+      // Cek apakah ada sampel rekaman kustom
+      const sampleKey = `${track.id}:${noteObj.val}`;
+      if (!targetCtx && state.customSamples[sampleKey]) {
+        const audio = new Audio(state.customSamples[sampleKey].url);
+        audio.volume = Math.min(1, vol);
+        audio.play().catch(() => {});
+        return;
+      }
+
+      const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      if (panner) panner.pan.setValueAtTime(track.pan || 0, now);
+
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.0001, now);
+      masterGain.gain.exponentialRampToValueAtTime(Math.max(0.01, vol * 0.28), now + 0.012);
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+
+      if (panner) {
+        masterGain.connect(panner);
+        panner.connect(ctx.destination);
+      } else {
+        masterGain.connect(ctx.destination);
+      }
+
+      // Sintesis Kendhang Jawa
+      if (track.role === 'kendhang') {
+        const k = String(noteObj.val);
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        if (k === 'P' || k === 'b' || k === 'd') {
+          const fStart = k === 'd' ? 145 : (k === 'b' ? 185 : 120);
+          const fEnd = k === 'd' ? 68 : (k === 'b' ? 88 : 58);
+          osc.frequency.setValueAtTime(fStart, now);
+          osc.frequency.exponentialRampToValueAtTime(fEnd, now + 0.24);
+          osc.connect(masterGain);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else {
+          // Tak / Ket / Tong
+          const fHigh = k === 't' ? 520 : (k === 'k' ? 640 : 310);
+          osc.frequency.setValueAtTime(fHigh, now);
+          osc.frequency.exponentialRampToValueAtTime(fHigh * 0.65, now + 0.09);
+          osc.connect(masterGain);
+          osc.start(now);
+          osc.stop(now + 0.14);
+        }
+        return;
+      }
+
+      // Sintesis Perunggu / Kayu / Vokal / Piano
+      const freq = getPitchFrequency(noteObj, track.role);
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const overtoneGain = ctx.createGain();
+
+      osc1.type = (track.role === 'piano' || track.role === 'gambang') ? 'triangle' : 'sine';
+      osc2.type = 'sine';
+
+      osc1.frequency.setValueAtTime(freq, now);
+      // Harmonik inharmonik khas perunggu gamelan (2.76x)
+      const ratio = (track.role === 'piano' || track.role === 'vocal' || track.role === 'bass') ? 2.0 : 2.76;
+      osc2.frequency.setValueAtTime(freq * ratio, now);
+
+      // Efek Gregel / Vibrato (~)
+      if (noteObj.articulation === 'gregel') {
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        lfo.frequency.setValueAtTime(6.5, now);
+        lfoGain.gain.setValueAtTime(freq * 0.025, now);
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc1.frequency);
+        lfo.start(now);
+        lfo.stop(now + decay);
+      }
+
+      // Efek Plesedan / Slide (↗)
+      if (noteObj.articulation === 'plesedan') {
+        osc1.frequency.exponentialRampToValueAtTime(freq * 1.12, now + Math.min(0.25, decay));
+      }
+
+      overtoneGain.gain.setValueAtTime(0.07, now);
+      overtoneGain.gain.exponentialRampToValueAtTime(0.0001, now + Math.min(0.35, decay));
+
+      osc1.connect(masterGain);
+      osc2.connect(overtoneGain);
+      overtoneGain.connect(masterGain);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + decay + 0.05);
+      osc2.stop(now + decay + 0.05);
+    }
+
+    function triggerColotomicSound(symbol, targetCtx = null, startTime = null) {
+      if (!symbol) return;
+      const ctx = targetCtx || audioCtx;
+      if (!ctx) return;
+      const now = startTime !== null ? startTime : ctx.currentTime;
+
+      const specs = {
+        '◯': { freq: 56, decay: 3.4, vol: 0.42 }, // Gong Ageng
+        '◌': { freq: 78, decay: 2.2, vol: 0.34 }, // Gong Suwukan
+        '◡': { freq: 295, decay: 1.5, vol: 0.25 }, // Kenong
+        '◠': { freq: 148, decay: 1.7, vol: 0.28 }, // Kempul
+        '+': { freq: 410, decay: 0.45, vol: 0.16 }, // Kethuk
+        '-': { freq: 520, decay: 0.35, vol: 0.14 }  // Kempyang
+      };
+      const sp = specs[symbol];
+      if (!sp) return;
+
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = 'sine';
+      osc2.type = 'sine';
+      osc1.frequency.setValueAtTime(sp.freq, now);
+      // Ombak / beating khas Gong Ageng
+      osc2.frequency.setValueAtTime(sp.freq + (symbol === '◯' ? 2.4 : 1.5), now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(sp.vol, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + sp.decay);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + sp.decay + 0.05);
+      osc2.stop(now + sp.decay + 0.05);
+    }
+
+    // ==================== ENGINE PLAYBACK REAL-TIME ====================
+    function togglePlayback() {
+      if (isPlaying) pausePlayback();
+      else startPlayback();
+    }
+
+    function startPlayback() {
+      ensureAudioCtx();
+      isPlaying = true;
+      updatePlayButtonUI(true);
+
+      const totalBeats = state.measureCount * state.beatsPerMeasure;
+      const ticksPerBeat = 12; // 12 sub-ticks mendukung subdivisi 1, 2, 3, dan 4 dengan presisi bulat!
+      const totalTicks = totalBeats * ticksPerBeat;
+
+      const stepLoop = () => {
+        if (!isPlaying) return;
+
+        const gb = Math.floor(currentPlaybackStep / ticksPerBeat);
+        const tickInBeat = currentPlaybackStep % ticksPerBeat;
+        const m = Math.floor(gb / state.beatsPerMeasure);
+
+        // Terapkan ekspresi gatra (Sirep, Seseg, Suwuk)
+        const mark = state.measureMarks[m] || {};
+        let tempoMult = state.halfSpeed ? 0.5 : 1.0;
+        let volMult = 1.0;
+        if (mark.expression === 'sirep') volMult = 0.42;
+        if (mark.expression === 'seseg') tempoMult *= 1.25;
+        if (mark.expression === 'suwuk') tempoMult *= 0.72;
+
+        // Sorot ketukan berjalan di kertas
+        if (tickInBeat === 0) {
+          document.querySelectorAll('.score-beat-cell').forEach(el => {
+            el.classList.toggle('bg-emerald-200/80', parseInt(el.dataset.globalBeat, 10) === gb);
+          });
+
+          // Bunyikan kolotomik & metronom di awal ketuk
+          if (state.colotomic[gb]) triggerColotomicSound(state.colotomic[gb]);
+          if (state.metronome) {
+            triggerColotomicSound(gb % state.beatsPerMeasure === 0 ? '+' : '-');
+          }
+        }
+
+        // Bunyikan tiap instrumen sesuai subdivisinya
+        const hasSolo = state.tracks.some(t => t.solo);
+        const beatDurationSec = 60 / (state.tempo * tempoMult);
+
+        state.tracks.forEach(trk => {
+          if (trk.muted) return;
+          if (hasSolo && !trk.solo) return;
+
+          const cell = trk.cells[gb];
+          if (!cell) return;
+          const stepInterval = ticksPerBeat / cell.subdivision;
+          if (tickInBeat % stepInterval === 0) {
+            const subIdx = Math.floor(tickInBeat / stepInterval);
+            const effTrack = { ...trk, volume: trk.volume * volMult };
+            if (cell.notes[subIdx]) {
+              triggerInstrumentSound(effTrack, cell.notes[subIdx], beatDurationSec / cell.subdivision);
+            }
+            if (cell.notesV2 && cell.notesV2[subIdx]) {
+              triggerInstrumentSound(effTrack, cell.notesV2[subIdx], beatDurationSec / cell.subdivision);
+            }
+          }
+        });
+
+        currentPlaybackStep += 1;
+        if (state.loopGatra) {
+          const loopStart = state.selection.measureIdx * state.beatsPerMeasure * ticksPerBeat;
+          const loopEnd = (state.selection.measureIdx + 1) * state.beatsPerMeasure * ticksPerBeat;
+          if (currentPlaybackStep >= loopEnd || currentPlaybackStep < loopStart) {
+            currentPlaybackStep = loopStart;
+          }
+        } else if (currentPlaybackStep >= totalTicks) {
+          currentPlaybackStep = 0;
+        }
+
+        const tickMs = (60000 / (state.tempo * tempoMult)) / ticksPerBeat;
+        playbackTimer = setTimeout(stepLoop, tickMs);
+      };
+
+      stepLoop();
+    }
+
+    function pausePlayback() {
+      isPlaying = false;
+      clearTimeout(playbackTimer);
+      updatePlayButtonUI(false);
+    }
+
+    function stopPlayback() {
+      pausePlayback();
+      currentPlaybackStep = 0;
+      document.querySelectorAll('.score-beat-cell').forEach(el => el.classList.remove('bg-emerald-200/80'));
+    }
+
+    function updatePlayButtonUI(playing) {
+      const icon = document.getElementById('playIcon');
+      const label = document.getElementById('playLabel');
+      if (icon) icon.className = playing ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+      if (label) label.textContent = playing ? 'Jeda' : 'Putar';
+    }
+
+    function scrubCurrentBeat() {
+      ensureAudioCtx();
+      const gb = state.selection.measureIdx * state.beatsPerMeasure + state.selection.beatIdx;
+      if (state.colotomic[gb]) triggerColotomicSound(state.colotomic[gb]);
+      state.tracks.forEach(trk => {
+        if (trk.muted) return;
+        const cell = trk.cells[gb];
+        if (cell?.notes[0]) triggerInstrumentSound(trk, cell.notes[0], 0.7);
+        if (cell?.notesV2?.[0]) triggerInstrumentSound(trk, cell.notesV2[0], 0.7);
+      });
+    }
+
+    // ==================== EKSPOR AUDIO WAV, GAMBAR PNG, PDF, MIDI, JSON ====================
+    function triggerFileDownload(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function exportScoreWav() {
+      closeModal('modalExport');
+      showToast('Merender file audio .WAV, harap tunggu...');
+
+      const sampleRate = 44100;
+      const totalBeats = state.measureCount * state.beatsPerMeasure;
+      const beatSec = 60 / state.tempo;
+      const totalSec = totalBeats * beatSec + 2.5;
+      const offlineCtx = new OfflineAudioContext(2, Math.ceil(sampleRate * totalSec), sampleRate);
+
+      const hasSolo = state.tracks.some(t => t.solo);
+
+      for (let gb = 0; gb < totalBeats; gb++) {
+        const startTime = gb * beatSec;
+        if (state.colotomic[gb]) {
+          triggerColotomicSound(state.colotomic[gb], offlineCtx, startTime);
+        }
+        state.tracks.forEach(trk => {
+          if (trk.muted) return;
+          if (hasSolo && !trk.solo) return;
+          const cell = trk.cells[gb];
+          if (!cell) return;
+          const subDur = beatSec / cell.subdivision;
+          for (let sub = 0; sub < cell.subdivision; sub++) {
+            const tSub = startTime + sub * subDur;
+            if (cell.notes[sub]) triggerInstrumentSound(trk, cell.notes[sub], subDur, offlineCtx, tSub);
+            if (cell.notesV2?.[sub]) triggerInstrumentSound(trk, cell.notesV2[sub], subDur, offlineCtx, tSub);
+          }
+        });
+      }
+
+      const renderedBuffer = await offlineCtx.startRendering();
+      const wavBlob = audioBufferToWavBlob(renderedBuffer);
+      const safeName = state.title.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      triggerFileDownload(wavBlob, `${safeName}.wav`);
+      showToast('File audio .WAV berhasil diunduh!');
+    }
+
+    function audioBufferToWavBlob(buffer) {
+      const numChannels = buffer.numberOfChannels;
+      const sampleRate = buffer.sampleRate;
+      const length = buffer.length * numChannels * 2 + 44;
+      const out = new ArrayBuffer(length);
+      const view = new DataView(out);
+
+      const writeStr = (offset, str) => {
+        for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+      };
+
+      writeStr(0, 'RIFF');
+      view.setUint32(4, length - 8, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * numChannels * 2, true);
+      view.setUint16(32, numChannels * 2, true);
+      view.setUint16(34, 16, true);
+      writeStr(36, 'data');
+      view.setUint32(40, length - 44, true);
+
+      let offset = 44;
+      for (let i = 0; i < buffer.length; i++) {
+        for (let ch = 0; ch < numChannels; ch++) {
+          const sample = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+          view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
+          offset += 2;
+        }
+      }
+      return new Blob([out], { type: 'audio/wav' });
+    }
+
+    function exportScorePng() {
+      closeModal('modalExport');
+      const visibleTracks = getFilteredTracksForView();
+      const perSys = state.measuresPerSystem;
+      const sysCount = Math.ceil(state.measureCount / perSys);
+
+      const width = 1400;
+      const rowHeight = 46;
+      const sysHeight = 56 + visibleTracks.length * rowHeight + 28;
+      const height = 180 + sysCount * sysHeight + 60;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+
+      // Background Kertas
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+
+      // Header Partitur
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 34px Inter, sans-serif';
+      ctx.fillText(state.title, 60, 75);
+
+      ctx.fillStyle = '#475569';
+      ctx.font = '18px Inter, sans-serif';
+      ctx.fillText(state.subtitle, 60, 108);
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 18px Inter, sans-serif';
+      ctx.fillText(state.composer, width - 60, 75);
+      ctx.fillText(`♩ = ${state.tempo}`, width - 60, 105);
+      ctx.textAlign = 'left';
+
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(60, 132);
+      ctx.lineTo(width - 60, 132);
+      ctx.stroke();
+
+      let curY = 175;
+      for (let s = 0; s < sysCount; s++) {
+        const startM = s * perSys;
+        const endM = Math.min(state.measureCount, startM + perSys);
+        const cols = endM - startM;
+        const areaX = 250;
+        const areaW = width - 310;
+        const gatraW = areaW / cols;
+
+        // Kolotomik
+        for (let m = startM; m < endM; m++) {
+          const gx = areaX + (m - startM) * gatraW;
+          const beatW = gatraW / state.beatsPerMeasure;
+          for (let b = 0; b < state.beatsPerMeasure; b++) {
+            const gb = m * state.beatsPerMeasure + b;
+            const sym = state.colotomic[gb] || '';
+            if (sym) {
+              ctx.fillStyle = sym === '◯' ? '#dc2626' : '#0f172a';
+              ctx.font = 'bold 18px JetBrains Mono, monospace';
+              ctx.textAlign = 'center';
+              ctx.fillText(sym, gx + b * beatW + beatW / 2, curY);
+            }
+          }
+        }
+        curY += 26;
+
+        visibleTracks.forEach(trk => {
+          ctx.textAlign = 'left';
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 17px Inter, sans-serif';
+          ctx.fillText(trk.name, 60, curY + 12);
+
+          for (let m = startM; m < endM; m++) {
+            const gx = areaX + (m - startM) * gatraW;
+            const beatW = gatraW / state.beatsPerMeasure;
+
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(gx, curY - 14);
+            ctx.lineTo(gx, curY + 24);
+            ctx.stroke();
+
+            for (let b = 0; b < state.beatsPerMeasure; b++) {
+              const gb = m * state.beatsPerMeasure + b;
+              const cell = trk.cells[gb];
+              if (!cell) continue;
+              const cx = gx + b * beatW + beatW / 2;
+              const text = cell.notes.map(n => n.val).join(' ');
+              ctx.textAlign = 'center';
+              ctx.fillStyle = '#0f172a';
+              ctx.font = 'bold 21px JetBrains Mono, monospace';
+              ctx.fillText(text, cx, curY + 12);
+
+              // Titik oktaf
+              const oct = cell.notes[0]?.octave || 0;
+              if (oct > 0) ctx.fillText('•', cx, curY - 6);
+              if (oct < 0) ctx.fillText('•', cx, curY + 26);
+            }
+          }
+          curY += rowHeight;
+        });
+
+        curY += 28;
+      }
+
+      canvas.toBlob(blob => {
+        const safeName = state.title.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+        triggerFileDownload(blob, `${safeName}.png`);
+        showToast('Gambar partitur .PNG berhasil diunduh!');
+      }, 'image/png');
+    }
+
+    function exportScorePdf() {
+      closeModal('modalExport');
+      setTimeout(() => window.print(), 200);
+    }
+
+    function exportScoreMidi() {
+      closeModal('modalExport');
+      // Bangun Standard MIDI File (SMF Type 0) biner murni
+      const tpq = 120;
+      const events = [];
+      const addVarLen = (arr, val) => {
+        let buffer = val & 0x7f;
+        while ((val >>= 7)) {
+          buffer <<= 8;
+          buffer |= (val & 0x7f) | 0x80;
+        }
+        while (true) {
+          arr.push(buffer & 0xff);
+          if (buffer & 0x80) buffer >>= 8;
+          else break;
+        }
+      };
+
+      const totalBeats = state.measureCount * state.beatsPerMeasure;
+      const semitoneMap = { '1': 60, '2': 62, '3': 64, '4': 65, '5': 67, '6': 69, '7': 71 };
+
+      const rawEvents = [];
+      state.tracks.forEach((trk, ch) => {
+        if (trk.muted || trk.role === 'kendhang') return;
+        for (let gb = 0; gb < totalBeats; gb++) {
+          const cell = trk.cells[gb];
+          if (!cell) continue;
+          const stepTicks = Math.floor(tpq / cell.subdivision);
+          for (let sub = 0; sub < cell.subdivision; sub++) {
+            const n = cell.notes[sub];
+            if (!n || !semitoneMap[n.val]) continue;
+            const midiNote = Math.max(24, Math.min(108, semitoneMap[n.val] + (n.octave || 0) * 12));
+            const startTick = gb * tpq + sub * stepTicks;
+            rawEvents.push({ tick: startTick, status: 0x90 | (ch % 15), data1: midiNote, data2: 96 });
+            rawEvents.push({ tick: startTick + stepTicks - 10, status: 0x80 | (ch % 15), data1: midiNote, data2: 0 });
+          }
+        }
+      });
+
+      rawEvents.sort((a, b) => a.tick - b.tick);
+      let lastTick = 0;
+      rawEvents.forEach(ev => {
+        addVarLen(events, Math.max(0, ev.tick - lastTick));
+        events.push(ev.status, ev.data1, ev.data2);
+        lastTick = ev.tick;
+      });
+      // End of track
+      events.push(0x00, 0xff, 0x2f, 0x00);
+
+      const header = [
+        0x4d, 0x54, 0x68, 0x64, 0x00, 0x00, 0x00, 0x06,
+        0x00, 0x00, 0x00, 0x01, (tpq >> 8) & 0xff, tpq & 0xff,
+        0x4d, 0x54, 0x72, 0x6b,
+        (events.length >> 24) & 0xff, (events.length >> 16) & 0xff, (events.length >> 8) & 0xff, events.length & 0xff
+      ];
+
+      const midiBytes = new Uint8Array([...header, ...events]);
+      const safeName = state.title.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      triggerFileDownload(new Blob([midiBytes], { type: 'audio/midi' }), `${safeName}.mid`);
+      showToast('File Standard MIDI (.MID) berhasil diunduh!');
+    }
+
+    function exportProjectJson() {
+      closeModal('modalExport');
+      const payload = JSON.stringify(state, null, 2);
+      const safeName = state.title.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      triggerFileDownload(new Blob([payload], { type: 'application/json' }), `${safeName}.json`);
+      showToast('Proyek .JSON berhasil diunduh!');
+    }
+
+    function importProjectJson(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const loaded = JSON.parse(e.target.result);
+          Object.assign(state, loaded);
+          syncControlsFromState();
+          renderAll();
+          closeQuickStart();
+          showToast(`Proyek "${state.title}" berhasil dimuat!`);
+        } catch (err) {
+          showToast('Format file JSON tidak valid');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // ==================== CUSTOM SAMPLE MANAGER ====================
+    function populateSampleTrackDropdown() {
+      const sel = document.getElementById('sampleTrackSelect');
+      if (!sel) return;
+      sel.innerHTML = state.tracks.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+      renderCustomSamplesList();
+    }
+
+    function handleCustomSampleUpload(event) {
+      const file = event.target.files?.[0];
+      const trackId = document.getElementById('sampleTrackSelect')?.value;
+      const pitch = document.getElementById('samplePitchSelect')?.value;
+      if (!file || !trackId || !pitch) return;
+
+      const url = URL.createObjectURL(file);
+      state.customSamples[`${trackId}:${pitch}`] = { url, name: file.name };
+      renderCustomSamplesList();
+      showToast(`Sampel "${file.name}" dipasang untuk nada ${pitch}`);
+    }
+
+    function renderCustomSamplesList() {
+      const box = document.getElementById('customSamplesList');
+      if (!box) return;
+      const entries = Object.entries(state.customSamples);
+      if (entries.length === 0) {
+        box.innerHTML = `<div class="text-[11px] sb-muted italic">Belum ada file audio kustom diunggah (menggunakan sintesis bawaan).</div>`;
+        return;
+      }
+      box.innerHTML = entries.map(([key, info]) => `
+        <div class="sb-input border rounded-lg px-3 py-1.5 flex items-center justify-between text-[11px]">
+          <span><strong>${key}</strong> → <span class="text-amber-400">${info.name}</span></span>
+          <button onclick="delete state.customSamples['${key}']; renderCustomSamplesList();" class="text-rose-400 hover:underline">Hapus</button>
+        </div>
+      `).join('');
+    }
+
+    function downloadGitHubSamplesConfig() {
+      const mapObj = {};
+      Object.entries(state.customSamples).forEach(([k, v]) => {
+        mapObj[k] = `./samples/${v.name}`;
+      });
+      const code = `// Pemetaan Sampel Audio Kustom untuk GitHub Pages\nexport const CUSTOM_GAMELAN_SAMPLES = ${JSON.stringify(mapObj, null, 2)};\n`;
+      triggerFileDownload(new Blob([code], { type: 'application/javascript' }), 'samples-map.js');
+      showToast('File samples-map.js untuk GitHub berhasil diunduh!');
+    }
+
+    // ==================== SAVE / VERSIONING, COMMAND SEARCH, THEME, UI HELPERS ====================
+    function saveCurrentProject() {
+      const stamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const snapshot = JSON.parse(JSON.stringify({
+        id: 'ver_' + Date.now(),
+        savedAt: stamp,
+        title: state.title,
+        subtitle: state.subtitle,
+        composer: state.composer,
+        systemMode: state.systemMode,
+        gaya: state.gaya,
+        laras: state.laras,
+        gendingForm: state.gendingForm,
+        tempo: state.tempo,
+        measureCount: state.measureCount,
+        tracks: state.tracks,
+        colotomic: state.colotomic,
+        measureMarks: state.measureMarks
+      }));
+      state.savedProjects.unshift(snapshot);
+      if (state.savedProjects.length > 15) state.savedProjects.pop();
+      renderSavedProjectsList();
+      showToast(`Versi disimpan (${stamp})`);
+    }
+
+    function renderSavedProjectsList() {
+      const list = document.getElementById('savedProjectsList');
+      if (!list) return;
+      if (state.savedProjects.length === 0) {
+        list.innerHTML = `<div class="col-span-2 sb-card border rounded-xl p-4 text-center sb-muted">Belum ada versi tersimpan pada sesi ini. Klik tombol <strong>Simpan (Ctrl+S)</strong> di bilah atas kapan saja.</div>`;
+        return;
+      }
+      list.innerHTML = state.savedProjects.map((proj, idx) => `
+        <div class="sb-card border rounded-xl p-3 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="font-bold text-xs truncate">${proj.title}</div>
+            <div class="text-[10px] sb-muted">Disimpan pukul ${proj.savedAt} • ${proj.measureCount} Gatra</div>
+          </div>
+          <button onclick="loadSavedVersion(${idx})" class="px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-bold text-[11px] shrink-0">Buka</button>
+        </div>
+      `).join('');
+    }
+
+    function loadSavedVersion(idx) {
+      const proj = state.savedProjects[idx];
+      if (!proj) return;
+      Object.assign(state, JSON.parse(JSON.stringify(proj)));
+      syncControlsFromState();
+      renderAll();
+      closeQuickStart();
+      showToast(`Memulihkan versi pukul ${proj.savedAt}`);
+    }
+
+    function cycleTheme() {
+      const order = ['auto', 'light', 'dark'];
+      state.theme = order[(order.indexOf(state.theme) + 1) % order.length];
+      applyTheme();
+    }
+
+    function applyTheme() {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = state.theme === 'dark' || (state.theme === 'auto' && prefersDark);
+      document.body.classList.toggle('theme-light', !isDark);
+      document.body.classList.toggle('theme-dark', isDark);
+
+      const label = document.getElementById('themeLabel');
+      const icon = document.getElementById('themeIcon');
+      if (label) label.textContent = state.theme === 'auto' ? 'Auto' : (state.theme === 'light' ? 'Terang' : 'Gelap');
+      if (icon) {
+        icon.className = state.theme === 'auto'
+          ? 'fa-solid fa-circle-half-stroke text-amber-400'
+          : (state.theme === 'light' ? 'fa-solid fa-sun text-amber-500' : 'fa-solid fa-moon text-sky-400');
+      }
+    }
+
+    // Command Search (Ctrl+K)
+    const COMMAND_CATALOG = [
+      { name: 'Putar / Jeda Playback (Spasi)', action: () => togglePlayback() },
+      { name: 'Buka Rancakan Wilah Perunggu Virtual (Ctrl+Alt+K)', action: () => toggleVirtualWilahBar() },
+      { name: 'Auto-Garap Karawitan & Kolotomik', action: () => openModal('modalAutoGarap') },
+      { name: 'Tambah Harmoni Gembyang (Oktaf)', action: () => applyVerticalInterval('gembyang') },
+      { name: 'Tambah Harmoni Kempyung', action: () => applyVerticalInterval('kempyung') },
+      { name: 'Alihkan Tampilan Panorama / Halaman (Shift+P)', action: () => togglePanoramaView() },
+      { name: 'Mode Latihan 0.5× Half-Speed', action: () => toggleHalfSpeed() },
+      { name: 'Ekspor Audio (.WAV)', action: () => exportScoreWav() },
+      { name: 'Ekspor Gambar Partitur (.PNG)', action: () => exportScorePng() },
+      { name: 'Cetak / Simpan sebagai PDF', action: () => exportScorePdf() },
+      { name: 'Ekspor Standard MIDI (.MID)', action: () => exportScoreMidi() },
+      { name: 'Simpan Versi Proyek (Ctrl+S)', action: () => saveCurrentProject() },
+      { name: 'Buka Manajer Sampel Audio Kustom', action: () => openModal('modalSamples') }
+    ];
+
+    function openCommandSearch() {
+      openModal('modalCommandSearch');
+      const inp = document.getElementById('commandSearchInput');
+      if (inp) {
+        inp.value = '';
+        filterCommandSearch('');
+        setTimeout(() => inp.focus(), 50);
+      }
+    }
+
+    function filterCommandSearch(q) {
+      const box = document.getElementById('commandSearchResults');
+      if (!box) return;
+      const term = q.toLowerCase();
+      const filtered = COMMAND_CATALOG.filter(c => c.name.toLowerCase().includes(term));
+      box.innerHTML = filtered.map((c, idx) => `
+        <button onclick="executeCommandItem(${COMMAND_CATALOG.indexOf(c)})" class="w-full px-3 py-2 rounded-lg sb-card border hover:border-amber-500 text-left font-semibold flex items-center justify-between">
+          <span>${c.name}</span>
+          <i class="fa-solid fa-arrow-turn-down fa-rotate-90 text-[10px] sb-muted"></i>
+        </button>
+      `).join('');
+    }
+
+    function executeCommandItem(idx) {
+      closeModal('modalCommandSearch');
+      COMMAND_CATALOG[idx]?.action();
+    }
+
+    // ==================== STATE SETTERS & UI CONTROLS ====================
+    function setSystemMode(mode) {
+      state.systemMode = mode;
+      syncControlsFromState();
+      renderAll();
+      showToast(mode === 'gamelan' ? 'Mode Notasi Kepatihan Gamelan Jawa' : 'Mode Notasi Angka Musik Barat');
+    }
+
+    function updateGaya(gaya) {
+      state.gaya = gaya;
+      syncControlsFromState();
+      renderScore();
+    }
+
+    function updateLaras(laras) {
+      state.laras = laras;
+      syncControlsFromState();
+      renderAll();
+    }
+
+    function updateGendingForm(form) {
+      state.gendingForm = form;
+      renderScore();
+    }
+
+    function updateWesternKey(k) {
+      state.westernKey = k;
+      state.subtitle = `${state.westernKey} • Birama ${state.beatsPerMeasure}/4`;
+      renderScore();
+      renderKeypad();
+    }
+
+    function updateTimeSig(beats) {
+      state.beatsPerMeasure = parseInt(beats, 10) || 4;
+      const total = state.measureCount * state.beatsPerMeasure;
+      state.tracks.forEach(t => {
+        while (t.cells.length < total) t.cells.push(createEmptyCell(1));
+      });
+      renderAll();
+    }
+
+    function updateTempo(val) {
+      state.tempo = Math.max(30, Math.min(240, parseInt(val, 10) || 84));
+      syncControlsFromState();
+      renderScore();
+    }
+
+    function setIramaLevel(level) {
+      const bpmMap = { lancar: 96, tanggung: 76, dados: 58, wiled: 44 };
+      updateTempo(bpmMap[level] || 84);
+      showToast(`Jenjang Irama: ${level.toUpperCase()} (${state.tempo} BPM)`);
+    }
+
+    function toggleHalfSpeed() {
+      state.halfSpeed = !state.halfSpeed;
+      const btn = document.getElementById('btnHalfSpeed');
+      if (btn) btn.classList.toggle('border-amber-500', state.halfSpeed);
+      renderScore();
+      showToast(state.halfSpeed ? 'Mode Latihan 0.5× Aktif' : 'Kecepatan Normal (1.0×)');
+    }
+
+    function toggleLoopGatra() {
+      state.loopGatra = !state.loopGatra;
+      const btn = document.getElementById('btnLoopGatra');
+      if (btn) btn.classList.toggle('border-amber-500', state.loopGatra);
+      showToast(state.loopGatra ? 'Loop Gatra Aktif' : 'Loop Gatra Nonaktif');
+    }
+
+    function toggleMetronome() {
+      state.metronome = !state.metronome;
+      renderRibbonContent();
+    }
+
+    let tapTimes = [];
+    function handleTapTempo() {
+      const now = Date.now();
+      tapTimes = tapTimes.filter(t => now - t < 2500);
+      tapTimes.push(now);
+      if (tapTimes.length >= 2) {
+        const diffs = [];
+        for (let i = 1; i < tapTimes.length; i++) diffs.push(tapTimes[i] - tapTimes[i - 1]);
+        const avg = diffs.reduce((a, b) => a + b, 0) / diffs.length;
+        updateTempo(Math.round(60000 / avg));
+      }
+    }
+
+    function setMeasuresPerSystem(n) {
+      state.measuresPerSystem = n;
+      renderRibbonContent();
+      renderScore();
+    }
+
+    function setScoreSubset(sub) {
+      state.scoreSubset = sub;
+      renderScore();
+    }
+
+    function setPaperStyle(cls) {
+      state.paperStyle = cls;
+      const paper = document.getElementById('scorePaper');
+      if (paper) {
+        paper.classList.remove('paper-classic', 'paper-ivory', 'paper-manuscript', 'paper-blueprint');
+        paper.classList.add(cls);
+      }
+    }
+
+    function togglePanoramaView() {
+      state.panoramaView = !state.panoramaView;
+      const lbl = document.getElementById('panoramaLabel');
+      if (lbl) lbl.textContent = state.panoramaView ? 'Panorama' : 'Halaman';
+      renderScore();
+    }
+
+    function toggleReviewMode() {
+      state.reviewMode = !state.reviewMode;
+      const badge = document.getElementById('reviewModeBadge');
+      if (badge) badge.classList.toggle('hidden', !state.reviewMode);
+      renderRibbonContent();
+      showToast(state.reviewMode ? 'Review Mode Aktif (Partitur Dikunci)' : 'Mode Edit Aktif');
+    }
+
+    function changeZoom(delta) {
+      state.zoom = Math.max(0.7, Math.min(1.4, Math.round((state.zoom + delta) * 10) / 10));
+      const paper = document.getElementById('scorePaper');
+      const lbl = document.getElementById('zoomLabel');
+      if (paper) paper.style.transform = `scale(${state.zoom})`;
+      if (lbl) lbl.textContent = `${Math.round(state.zoom * 100)}%`;
+    }
+
+    function updateScoreMeta(field, value) {
+      state[field] = value.trim();
+      syncControlsFromState();
+    }
+
+    function toggleTrackMute(idx) {
+      state.tracks[idx].muted = !state.tracks[idx].muted;
+      renderMixerAndNavigator();
+      renderScore();
+    }
+
+    function toggleTrackSolo(idx) {
+      state.tracks[idx].solo = !state.tracks[idx].solo;
+      renderMixerAndNavigator();
+      renderScore();
+    }
+
+    function setTrackVolume(idx, val) {
+      state.tracks[idx].volume = parseFloat(val);
+    }
+
+    function setTrackPan(idx, val) {
+      state.tracks[idx].pan = parseFloat(val);
+    }
+
+    function addInstrumentTrack(name, role, timbre) {
+      pushUndoSnapshot();
+      state.tracks.push(createTrack(name, role, timbre, 0, 0.85));
+      closeModal('modalAddTrack');
+      renderAll();
+      showToast(`Menambahkan instrumen: ${name}`);
+    }
+
+    function removeTrack(idx) {
+      if (state.tracks.length <= 1) return;
+      pushUndoSnapshot();
+      state.tracks.splice(idx, 1);
+      if (state.selection.trackIdx >= state.tracks.length) state.selection.trackIdx = 0;
+      renderAll();
+    }
+
+    function syncControlsFromState() {
+      const topTitle = document.getElementById('topDocTitle');
+      const topBadge = document.getElementById('topModeBadge');
+      const topSub = document.getElementById('topSubInfo');
+      const tempoInput = document.getElementById('tempoInput');
+      const btnGam = document.getElementById('btnSystemGamelan');
+      const btnWest = document.getElementById('btnSystemWestern');
+      const gamGroup = document.getElementById('gamelanConfigGroup');
+      const westGroup = document.getElementById('westernConfigGroup');
+      const gayaBadge = document.getElementById('inspectorGayaBadge');
+
+      if (topTitle) topTitle.textContent = state.title;
+      if (tempoInput) tempoInput.value = state.tempo;
+
+      if (state.systemMode === 'gamelan') {
+        if (topBadge) topBadge.textContent = `Kepatihan • ${state.laras.toUpperCase()}`;
+        if (topSub) topSub.textContent = `Gaya ${state.gaya.toUpperCase()} • ${state.measureCount} Gatra • ♩ = ${state.tempo} BPM`;
+        if (btnGam) btnGam.className = 'px-2.5 py-1 rounded-md bg-amber-500 text-slate-950 transition';
+        if (btnWest) btnWest.className = 'px-2.5 py-1 rounded-md sb-muted hover:text-amber-400 transition';
+        if (gamGroup) gamGroup.classList.remove('hidden');
+        if (westGroup) westGroup.classList.add('hidden');
+        if (gayaBadge) gayaBadge.textContent = state.gaya.toUpperCase();
+        const sg = document.getElementById('selectGaya');
+        const sl = document.getElementById('selectLaras');
+        const sf = document.getElementById('selectGendingForm');
+        if (sg) sg.value = state.gaya;
+        if (sl) sl.value = state.laras;
+        if (sf) sf.value = state.gendingForm;
+      } else {
+        if (topBadge) topBadge.textContent = `Diatonis • ${state.westernKey}`;
+        if (topSub) topSub.textContent = `Birama ${state.beatsPerMeasure}/4 • ${state.measureCount} Birama • ♩ = ${state.tempo} BPM`;
+        if (btnWest) btnWest.className = 'px-2.5 py-1 rounded-md bg-sky-500 text-slate-950 transition';
+        if (btnGam) btnGam.className = 'px-2.5 py-1 rounded-md sb-muted hover:text-amber-400 transition';
+        if (gamGroup) gamGroup.classList.add('hidden');
+        if (westGroup) westGroup.classList.remove('hidden');
+        if (gayaBadge) gayaBadge.textContent = state.westernKey;
+      }
+    }
+
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('hidden');
+      if (id === 'modalSamples') populateSampleTrackDropdown();
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add('hidden');
+    }
+
+    function openQuickStart() {
+      renderSavedProjectsList();
+      openModal('quickStartModal');
+    }
+
+    function closeQuickStart() {
+      closeModal('quickStartModal');
+    }
+
+    function switchQuickStartTab(tab) {
+      ['templates', 'saved', 'guide'].forEach(t => {
+        const btn = document.getElementById('qsTab' + t.charAt(0).toUpperCase() + t.slice(1));
+        const body = document.getElementById('qsBody' + t.charAt(0).toUpperCase() + t.slice(1));
+        const active = t === tab;
+        if (btn) btn.className = active ? 'px-3 py-2 border-b-2 border-amber-500 text-amber-400' : 'px-3 py-2 border-b-2 border-transparent sb-muted';
+        if (body) body.classList.toggle('hidden', !active);
+      });
+    }
+
+    function toggleLeftDrawer(force = null) {
+      const drawer = document.getElementById('leftSidebar');
+      const backdrop = document.getElementById('leftDrawerBackdrop');
+      if (!drawer || !backdrop) return;
+      const open = force !== null ? force : drawer.classList.contains('-translate-x-full');
+      drawer.classList.toggle('-translate-x-full', !open);
+      backdrop.classList.toggle('hidden', !open);
+    }
+
+    function toggleKeypadMinimize() {
+      const kp = document.getElementById('floatingKeypad');
+      const icon = document.getElementById('keypadMinIcon');
+      if (!kp) return;
+      const minimized = kp.classList.toggle('keypad-minimized');
+      if (icon) icon.className = minimized ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastContainer');
+      if (!box) return;
+      const el = document.createElement('div');
+      el.className = 'px-3.5 py-1.5 rounded-full bg-slate-900/95 border border-amber-500/40 text-amber-200 text-xs font-semibold shadow-xl transition-opacity duration-300';
+      el.textContent = msg;
+      box.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 300);
+      }, 2400);
+    }
+
+    // ==================== DRAG & TOUCH SUPPORT FLOATING KEYPAD ====================
+    function initDraggableKeypad() {
+      const kp = document.getElementById('floatingKeypad');
+      const handle = document.getElementById('keypadDragHandle');
+      if (!kp || !handle) return;
+
+      let dragging = false;
+      let startX = 0, startY = 0, origLeft = 0, origTop = 0;
+
+      const onStart = (clientX, clientY) => {
+        if (window.innerWidth < 640) return;
+        dragging = true;
+        const rect = kp.getBoundingClientRect();
+        startX = clientX;
+        startY = clientY;
+        origLeft = rect.left;
+        origTop = rect.top;
+        kp.style.right = 'auto';
+        kp.style.bottom = 'auto';
+        kp.style.left = `${origLeft}px`;
+        kp.style.top = `${origTop}px`;
+      };
+
+      const onMove = (clientX, clientY) => {
+        if (!dragging) return;
+        const nextLeft = Math.max(8, Math.min(window.innerWidth - kp.offsetWidth - 8, origLeft + (clientX - startX)));
+        const nextTop = Math.max(52, Math.min(window.innerHeight - kp.offsetHeight - 28, origTop + (clientY - startY)));
+        kp.style.left = `${nextLeft}px`;
+        kp.style.top = `${nextTop}px`;
+      };
+
+      const onEnd = () => { dragging = false; };
+
+      handle.addEventListener('mousedown', e => onStart(e.clientX, e.clientY));
+      window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      window.addEventListener('mouseup', onEnd);
+
+      handle.addEventListener('touchstart', e => {
+        if (e.touches[0]) onStart(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+      window.addEventListener('touchmove', e => {
+        if (dragging && e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+      window.addEventListener('touchend', onEnd);
+    }
+
+    // ==================== PINTASAN KEYBOARD GLOBAL ====================
+    document.addEventListener('keydown', e => {
+      const tag = document.activeElement?.tagName;
+      const isEditingText = tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable;
+
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k' && !e.altKey) {
+        e.preventDefault();
+        openCommandSearch();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.altKey && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggleVirtualWilahBar();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        saveCurrentProject();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !isEditingText) {
+        e.preventDefault();
+        undoLastAction();
+        return;
+      }
+      if (e.key === 'Escape') {
+        closeModal('modalCommandSearch');
+        closeModal('modalAutoGarap');
+        closeModal('modalSamples');
+        closeModal('modalExport');
+        closeModal('modalAddTrack');
+        return;
+      }
+
+      if (isEditingText) return;
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlayback();
+      } else if (e.shiftKey && e.key.toLowerCase() === 'p') {
+        e.preventDefault();
+        togglePanoramaView();
+      } else if (e.key.toLowerCase() === 'v') {
+        e.preventDefault();
+        toggleActiveVoice();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        advanceCursor(1);
+        renderScore();
+        renderKeypad();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        advanceCursor(-1);
+        renderScore();
+        renderKeypad();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        state.selection.trackIdx = (state.selection.trackIdx + 1) % state.tracks.length;
+        renderScore();
+        renderKeypad();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        state.selection.trackIdx = (state.selection.trackIdx - 1 + state.tracks.length) % state.tracks.length;
+        renderScore();
+        renderKeypad();
+      } else if (/^[0-7\.]$/.test(e.key)) {
+        e.preventDefault();
+        enterNoteValue(e.key);
+      } else if (state.tracks[state.selection.trackIdx]?.role === 'kendhang' && /^[Pbdptko]$/.test(e.key)) {
+        e.preventDefault();
+        enterNoteValue(e.key);
+      }
+    });
+
+    // ==================== INISIALISASI APLIKASI ====================
+    function renderAll() {
+      renderRibbonContent();
+      renderDynamicPartTabs();
+      renderMixerAndNavigator();
+      renderScore();
+      renderKeypad();
+      generateSmartSuggestions();
+    }
+
+    window.onload = function () {
+      applyTheme();
+      initDraggableKeypad();
+      loadPreset('ricik_slendro', true);
+      saveCurrentProject();
+    };
+  </script>
+</body>
+</html>
