@@ -21,8 +21,9 @@ Buka landing page `index.html`, lalu klik **Buka aplikasi**. Editor aktif masih 
 - `app/app.css` — styling shell
 - `index.hmtl` — editor legacy yang masih aktif
 - `assets/` — aset landing page dan favicon
-- `src/project-store.mjs` — fondasi baru untuk validasi dan penyimpanan proyek; belum terhubung ke editor
-- `tests/` — unit test untuk modul project store
+- `src/project-store.mjs` — fondasi validasi dan penyimpanan proyek
+- `src/safe-text.mjs` — utilitas untuk teks aman saat merender ke DOM
+- `tests/` — unit test untuk modul project store dan teks aman
 - `docs/FEATURE_AUDIT.md` — audit fitur dan batasan
 - `docs/ARCHITECTURE.md` — rencana modularisasi bertahap
 
