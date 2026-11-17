@@ -4,47 +4,47 @@ function clone(value) {
   return structuredClone(value);
 }
 
-function equalState(left, right) {
+function isEquivalent(left, right) {
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
-/**
- * Create a small, framework-independent project state container.
- * Mutations are validated and committed atomically; failed updates leave state unchanged.
- */
-export function createProjectState(initialProject, { historyLimit = 100 } = {}) {
+export function createProjectState(initialProject, { historyLimit = 50 } = {}) {
   if (!Number.isInteger(historyLimit) || historyLimit < 1) {
     throw new RangeError('historyLimit must be a positive integer.');
   }
 
   validateProject(initialProject);
+
   let current = clone(initialProject);
-  const past = [];
-  const future = [];
+  const undoStack = [];
+  const redoStack = [];
   const listeners = new Set();
 
-  function publish(reason) {
+  function notify(reason) {
     const snapshot = clone(current);
     for (const listener of listeners) {
       try {
-        listener(clone(snapshot), { reason, canUndo: past.length > 0, canRedo: future.length > 0 });
+        listener(snapshot, {
+          reason,
+          canUndo: undoStack.length > 0,
+          canRedo: redoStack.length > 0,
+        });
       } catch (error) {
-        // A subscriber must not roll back or interrupt a committed state change.
-        globalThis.console?.error?.('Laras Etam project-state subscriber failed:', error);
+        console.error('Project state listener failed:', error);
       }
     }
   }
 
   function commit(nextProject, reason) {
     validateProject(nextProject);
-    const next = clone(nextProject);
-    if (equalState(current, next)) return false;
+    const candidate = clone(nextProject);
+    if (isEquivalent(current, candidate)) return false;
 
-    past.push(clone(current));
-    if (past.length > historyLimit) past.shift();
-    current = next;
-    future.length = 0;
-    publish(reason);
+    undoStack.push(clone(current));
+    if (undoStack.length > historyLimit) undoStack.shift();
+    current = candidate;
+    redoStack.length = 0;
+    notify(reason);
     return true;
   }
 
@@ -54,17 +54,21 @@ export function createProjectState(initialProject, { historyLimit = 100 } = {}) 
     },
 
     subscribe(listener) {
-      if (typeof listener !== 'function') throw new TypeError('listener must be a function.');
+      if (typeof listener !== 'function') {
+        throw new TypeError('listener must be a function');
+      }
       listeners.add(listener);
       return () => listeners.delete(listener);
     },
 
-    /** Mutator receives a draft. It may mutate that draft or return a replacement project. */
     update(mutator, reason = 'update') {
-      if (typeof mutator !== 'function') throw new TypeError('mutator must be a function.');
+      if (typeof mutator !== 'function') {
+        throw new TypeError('mutator must be a function');
+      }
       const draft = clone(current);
-      const replacement = mutator(draft);
-      return commit(replacement === undefined ? draft : replacement, reason);
+      const result = mutator(draft);
+      const next = result === undefined ? draft : result;
+      return commit(next, reason);
     },
 
     replace(project, reason = 'replace') {
@@ -72,34 +76,28 @@ export function createProjectState(initialProject, { historyLimit = 100 } = {}) 
     },
 
     undo() {
-      if (past.length === 0) return false;
-      future.push(clone(current));
-      current = past.pop();
-      publish('undo');
+      if (undoStack.length === 0) return false;
+      redoStack.push(clone(current));
+      current = undoStack.pop();
+      notify('undo');
       return true;
     },
 
     redo() {
-      if (future.length === 0) return false;
-      past.push(clone(current));
-      if (past.length > historyLimit) past.shift();
-      current = future.pop();
-      publish('redo');
+      if (redoStack.length === 0) return false;
+      undoStack.push(clone(current));
+      if (undoStack.length > historyLimit) undoStack.shift();
+      current = redoStack.pop();
+      notify('redo');
       return true;
     },
 
     canUndo() {
-      return past.length > 0;
+      return undoStack.length > 0;
     },
 
     canRedo() {
-      return future.length > 0;
-    },
-
-    clearHistory() {
-      past.length = 0;
-      future.length = 0;
-      publish('history-cleared');
+      return redoStack.length > 0;
     },
   });
 }
