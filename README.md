@@ -1,47 +1,36 @@
 # Laras Etam
 
-Laras Etam adalah studio notasi digital berbasis web yang dirancang untuk menulis, mengatur, dan mengekspor partitur gamelan Jawa serta musik Barat. Proyek ini menggabungkan pendekatan visual seperti editor partitur modern dengan pengalaman kerja yang intuitif dan mudah diakses di browser.
+Laras Etam adalah studio notasi digital berbasis web untuk menyusun partitur gamelan Jawa dan musik Barat. Aplikasi menyediakan editor not angka, track instrumen, playback sintetis, serta ekspor proyek dan partitur.
 
-## Tujuan proyek
+## Fitur
 
-Laras Etam dibuat untuk membantu musisi, penata, pelajar, dan penggiat budaya dalam:
+- Mode gamelan Jawa dan musik Barat dengan pengaturan laras, gaya, bentuk gending, birama, dan tempo.
+- Editor not angka dengan keypad, subdivisi, dua lapisan suara, lirik, artikulasi, dan navigasi kursor.
+- Track instrumen dengan kontrol mixer dasar, tab part, serta fitur Auto-Garap berbasis pola.
+- Playback sintetis berbasis Web Audio, metronom, loop, dan wilah virtual.
+- Ekspor/impor JSON, ekspor PNG, cetak/PDF, WAV sintetis, dan MIDI dasar.
 
-- menulis notasi dalam format yang lebih terstruktur
-- menyiapkan partitur untuk latihan, presentasi, dan dokumentasi
-- mengeksplorasi pola irama, laras, dan bentuk gending
-- mengekspor karya ke format yang lebih siap dibagikan
+## Buka aplikasi
 
-## Fitur utama
-
-- Antarmuka editor notasi interaktif
-- Mode sistem gamelan dan musik Barat
-- Konfigurasi laras, bentuk gending, dan tempo
-- Multi-track instrumen dan kontrol suara
-- Playback, loop, dan wilah virtual
-- Ekspor ke PNG, PDF, WAV, MIDI, dan JSON
-- Akses cepat dari browser tanpa setup server yang rumit
+Buka landing page `index.html`, lalu pilih **Buka aplikasi**. Editor utama saat ini masih berada di `index.hmtl`; `app/index.html` menyediakan shell aplikasi dan memuat editor tersebut.
 
 ## Struktur repositori
 
-- `index.html` — landing page proyek
-- `index.hmtl` — aplikasi utama / editor partitur
-- `app/index.html` — halaman pengarah ke aplikasi utama
-- `assets/landing.css` — styling landing page
-- `assets/landing.js` — interaksi landing page
-- `assets/favicon.svg` — ikon branding Laras Etam
+- `index.html` — landing page Laras Etam
+- `app/index.html` — shell aplikasi dengan header branding
+- `app/app.css` — styling shell aplikasi
+- `index.hmtl` — editor utama legacy
+- `assets/` — aset landing page dan favicon
+- `docs/FEATURE_AUDIT.md` — audit implementasi dan batasan fitur
 
-## Cara membuka
+## Batasan yang diketahui
 
-1. Buka `index.html` di browser untuk melihat landing page.
-2. Klik tombol `Buka aplikasi` untuk masuk ke editor partitur.
-3. Atau buka `app/index.html` yang akan mengarahkan langsung ke aplikasi.
+Laras Etam belum setara fitur dengan Avid Sibelius. Belum ada impor MIDI/MusicXML pada implementasi yang ditinjau, engraving notasi profesional, atau sound library realistis. Ekspor MIDI bersifat dasar/lossy; playback dan WAV menggunakan sintesis browser. Riwayat versi proyek berjalan di memori halaman. Detail dan prioritas perbaikan ada di [audit fitur](docs/FEATURE_AUDIT.md).
 
-## Catatan penggunaan
+## Menjalankan / publikasi
 
-- Aplikasi utama masih berada di file `index.hmtl` dan terus disempurnakan agar lebih konsisten secara struktur dan branding.
-- Project ini ditujukan untuk showcase portfolio, publikasi, dan demonstrasi kemampuan dalam pengembangan UI interaktif berbasis web.
-- GitHub Pages dapat digunakan untuk publikasi landing page dan aplikasi dasar setelah konfigurasi repositori selesai.
+Aplikasi dapat dibuka sebagai situs statis di browser modern. Beberapa dependensi UI dimuat melalui CDN sehingga memerlukan koneksi internet. Untuk GitHub Pages, pilih branch `main` dan folder root melalui **Settings → Pages**.
 
-## Status proyek
+## Status audit
 
-Proyek ini sedang dalam tahap finalisasi branding, struktur repositori, dan polish UI agar lebih profesional dan siap ditampilkan untuk kebutuhan portfolio atau demo publik.
+Dokumentasi fitur dibuat dari tinjauan statis kode, bukan hasil pengujian runtime. Validasi lintas-browser dan pengujian semua jalur ekspor masih perlu dilakukan.
