@@ -1,10 +1,11 @@
 {
   "name": "laras-etam",
   "private": true,
+  "type": "module",
   "version": "0.1.0",
   "description": "Studio notasi digital untuk gamelan Jawa dan musik Barat",
   "scripts": {
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs tests/*.test.js"
   },
   "engines": { "node": ">=20" }
 }

@@ -5,23 +5,21 @@ Editor berjalan dari `index.hmtl`, dengan UI, state, renderer, audio, dan ekspor
 ## Fondasi yang disiapkan
 
 - `src/project-store.mjs`: format proyek JSON berversi, validasi bentuk data minimum, dukungan baca berkas JSON legacy, serta helper penyimpanan browser.
+- `src/project-state.js`: state container framework-independent dengan update tervalidasi, defensive copy, subscribe, undo/redo, dan batas riwayat.
 - `src/safe-text.mjs`: normalisasi teks, HTML escaping khusus konteks text-node, dan `setTextContent()` untuk penulisan DOM tanpa parsing markup.
-- `tests/project-store.test.mjs`: unit test untuk serialisasi, parsing, validasi, dan storage.
-- `tests/safe-text.test.mjs`: unit test untuk normalisasi, escaping, dan penulisan melalui `textContent`.
+- `tests/`: unit test untuk project store, state, dan safe text.
 - `package.json`: perintah `npm test` berbasis Node.js test runner.
 
-## Status dan batasan integrasi
+## Batas integrasi saat ini
 
-Utilitas safe-text kini memiliki helper yang lebih aman untuk pemakaian di kode baru. Namun, editor legacy belum dimigrasikan: renderer inline masih harus diaudit dan diubah satu per satu agar memakai `textContent`/`setTextContent()` untuk nilai dari pengguna atau berkas impor. Fungsi `escapeHtml()` hanya aman untuk konteks teks HTML, bukan atribut, URL, CSS, JavaScript, atau HTML kaya. Jangan menganggap seluruh editor terlindungi sampai integrasi dan tes DOM selesai.
-
-Modul project-store juga belum disambungkan ke fungsi simpan/impor inline pada editor. Integrasikan setelah state legacy dipetakan dan skenario migrasi diuji.
+Modul state dan store adalah fondasi teruji secara terpisah, tetapi belum disambungkan ke fungsi inline editor. `safe-text` juga belum dipasang di seluruh renderer legacy. Jangan menganggap autosave atau perlindungan seluruh DOM sudah aktif sampai integrasi dan tes browser selesai.
 
 ## Urutan pemisahan modul
 
 1. Petakan state/fungsi legacy dan tambah tes karakterisasi untuk perilaku saat ini.
 2. Sambungkan model proyek dan penyimpanan dengan membaca format JSON lama.
-3. Migrasikan renderer dinamis secara bertahap ke API DOM aman dan uji nilai impor.
-4. Pisahkan model skor dan aksi edit: input nada, subdivisi, seleksi, undo/redo.
+3. Migrasikan renderer dinamis secara bertahap ke API DOM aman.
+4. Ganti perubahan state inline dengan `project-state` dan integrasikan undo/redo.
 5. Pisahkan renderer DOM, playback/audio, dan adapter ekspor.
 6. Pindahkan event handler inline ke modul UI dan hapus global hanya setelah semua pemanggil dialihkan.
 7. Ubah halaman editor menjadi loader modul setelah pengujian regresi lulus.
