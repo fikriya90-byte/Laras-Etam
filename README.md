@@ -22,9 +22,10 @@ Buka landing page `index.html`, lalu klik **Buka aplikasi**. Editor aktif masih 
 - `index.hmtl` — editor legacy yang masih aktif
 - `assets/` — aset landing page dan favicon
 - `src/project-store.mjs` — validasi dan format penyimpanan proyek
-- `src/project-state.js` — state container dengan update tervalidasi dan undo/redo; belum terintegrasi ke editor aktif
-- `src/safe-text.mjs` — helper teks aman; belum terintegrasi ke seluruh renderer legacy
-- `tests/` — unit test untuk store, state, dan safe-text
+- `src/project-state.js` — state container dengan validasi, undo/redo, dan history management
+- `src/project-persistence.js` — helper simpan/muat/bersihkan proyek ke localStorage atau storage browser lainnya
+- `src/safe-text.mjs` — helper teks aman untuk rendering DOM yang aman
+- `tests/` — unit test untuk store, state, persistence, dan safe-text
 - `docs/FEATURE_AUDIT.md` — audit fitur dan batasan
 - `docs/ARCHITECTURE.md` — rencana modularisasi bertahap
 
@@ -40,4 +41,4 @@ Laras Etam belum setara fitur dengan Avid Sibelius. Pada audit statis terakhir, 
 
 ## Status refactor
 
-Modul store, state, dan safe-text sudah memiliki fondasi unit test, tetapi masih belum menggantikan fungsi inline aplikasi. Lihat [rencana arsitektur](docs/ARCHITECTURE.md).
+Modul store, state, persistence, dan safe-text sudah memiliki fondasi unit test, tetapi masih belum menggantikan fungsi inline aplikasi. Lihat [rencana arsitektur](docs/ARCHITECTURE.md).
